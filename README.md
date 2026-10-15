@@ -6,8 +6,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 ## Author
 
 - **Me:** Roberto Navia Guillen
-- **Task Pod members:**
-  
+- **Task Pod members:** _to be added_
 - **Final project team:** _to be defined_
 - **Final project repository:** _to be defined_
 
@@ -19,7 +18,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 
 ## Reflections
 
-- https://github.com/RobertoNaviaGuillen/databases-portfolio/tree/main/Module01
+- [Reflection 1](Reflections/ref01.md)
 
 
 
