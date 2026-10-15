@@ -32,7 +32,7 @@ By the end of this module, I can:
 
 - [x] Task 1 — Portfolio created from template, `.gitignore`, learning goals
 - [ ] Task 2 — Git & Markdown proficiency in the pod
-- [ ] Task 3 — Toolchain with `uv`
+- [x] Task 3 — Toolchain with `uv` ([check script](../uv-check.py), [output](uv-check-output.txt), [pyproject.toml](../pyproject.toml), [uv.lock](../uv.lock))
 - [ ] Task 4 — `sqlite3` shell tour
 - [ ] Task 5 — SQL Island
 - [ ] Task 6 — Load telemetry and query it
