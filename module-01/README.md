@@ -50,7 +50,45 @@ By the end of this module, I can:
 
     cnc-02 has the highest peak — that is the bearing wear built into the generator.
   - **Cloud cost:** 11 MB for two days is roughly 2 GB a year — a cloud setup (server + managed PostgreSQL + backend) would cost tens of euros every month, paid by Wittkamp, for data that one laptop answers in under 0.1 s with zero infrastructure.
-- [ ] Task 7 — LLM-assisted SQL profiling
+- [x] Task 7 — LLM-assisted SQL profiling ([all queries](llm-query.sql), [full output](llm-query-results.txt))
+
+### Task 7 — Verifying an LLM-generated query
+
+**LLM used:** Claude (Anthropic). **Prompt:**
+
+> Here is my SQLite table: `readings(ts TEXT, machine TEXT, temp_c REAL, vib_rms REAL, spindle_load REAL)`. Write a query that returns, for each machine, the average spindle load for readings taken overnight (after 18:00), ordered by average load descending.
+
+**Generated SQL:**
+
+```sql
+SELECT machine, AVG(spindle_load) AS avg_load
+FROM readings
+WHERE time(ts) >= '18:00:00'
+GROUP BY machine
+ORDER BY avg_load DESC;
+```
+
+**Run it:** it executes (0.047 s) → cnc-03 60.43 · cnc-01 60.37 · cnc-02 60.36. Sanity check: 43,200 rows match, which is exactly 6 h × 1,200 readings/h × 2 days × 3 machines.
+
+**Profile it (`EXPLAIN QUERY PLAN`):**
+
+```
+|--SCAN readings
+|--USE TEMP B-TREE FOR GROUP BY
+`--USE TEMP B-TREE FOR ORDER BY
+```
+
+`SCAN readings` = a full-table scan of all 172,800 rows. An index would not help here anyway, because `time(ts)` is a function applied to every row.
+
+**Break it:**
+
+| Variant | What it really means | Result |
+|---|---|---|
+| `ts > '2026-01-05 18:00:00'` | everything after Monday 18:00, **including Tuesday daytime** | cnc-02 on top — different answer |
+| `ts LIKE '%18%'` | any timestamp containing "18" (minutes, seconds…) | 18,102 rows instead of 43,200 — wrong |
+| `time(ts) >= '18:00' OR time(ts) < '06:00'` | "overnight" read as 18:00–06:00 | cnc-02 on top — different answer |
+
+**Verification paragraph:** The model got the syntax, the `GROUP BY` and the ordering right, and it correctly used `time(ts)` to compare only the time of day instead of comparing `ts` as a full date string. What it got "wrong" is a silent assumption: it read *overnight (after 18:00)* as 18:00–midnight only, while a night shift would also include 00:00–06:00, and with that reading the ranking flips (cnc-02 becomes first instead of last). I verified it by running it on the real data, checking the row count against a hand calculation (43,200), profiling it with `EXPLAIN QUERY PLAN` (full scan), and running the alternative versions side by side. Lesson: the averages differ by only ~0.1, so the "ranking" is mostly noise — a query can run perfectly and still answer a different question than the one the user meant.
 
 ## Reflection
 

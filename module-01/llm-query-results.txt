@@ -1,0 +1,65 @@
+.mode column
+.headers on
+
+-- A. The LLM's query (as generated)
+.timer on
+SELECT machine, AVG(spindle_load) AS avg_load
+FROM readings
+WHERE time(ts) >= '18:00:00'
+GROUP BY machine
+ORDER BY avg_load DESC;
+machine       avg_load
+-------  ------------------
+cnc-03   60.433166666666665
+cnc-01   60.367048611111109
+cnc-02   60.355868055555554
+Run Time: real 0.047467 user 0.015625 sys 0.015625
+.timer off
+
+-- Profile it
+EXPLAIN QUERY PLAN
+SELECT machine, AVG(spindle_load) AS avg_load
+FROM readings
+WHERE time(ts) >= '18:00:00'
+GROUP BY machine
+ORDER BY avg_load DESC;
+QUERY PLAN
+|--SCAN readings
+|--USE TEMP B-TREE FOR GROUP BY
+`--USE TEMP B-TREE FOR ORDER BY
+
+-- B. Break it #1: a plain string comparison against a full timestamp.
+--    Looks similar, but means "everything after Monday 18:00" (incl. Tuesday daytime).
+SELECT machine, AVG(spindle_load) AS avg_load
+FROM readings
+WHERE ts > '2026-01-05 18:00:00'
+GROUP BY machine
+ORDER BY avg_load DESC;
+machine       avg_load
+-------  ------------------
+cnc-02   60.037889765966803
+cnc-03    60.02894511447024
+cnc-01   60.008048797425872
+
+-- C. Break it #2: the sloppy LIKE version. Matches '18' anywhere in the text
+--    (minutes, seconds, dates), not "after 18:00".
+SELECT COUNT(*) AS like_rows FROM readings WHERE ts LIKE '%18%';
+like_rows
+---------
+    18102
+SELECT COUNT(*) AS evening_rows FROM readings WHERE time(ts) >= '18:00:00';
+evening_rows
+------------
+       43200
+
+-- D. Ambiguity: does "overnight" include 00:00-06:00? The LLM assumed 18:00-24:00 only.
+SELECT machine, AVG(spindle_load) AS avg_load
+FROM readings
+WHERE time(ts) >= '18:00:00' OR time(ts) < '06:00:00'
+GROUP BY machine
+ORDER BY avg_load DESC;
+machine       avg_load
+-------  ------------------
+cnc-02   60.205309027777773
+cnc-03   60.202458333333333
+cnc-01   60.184864583333336
