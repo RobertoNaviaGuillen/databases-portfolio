@@ -19,10 +19,8 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 
 ## Reflections
 
-- [Reflection 1](module-01/reflection.md)
+- https://github.com/RobertoNaviaGuillen/databases-portfolio/tree/main/Module01
 
-## Course links
 
-- [Course syllabus](LINK_DEL_SYLLABUS)
 
 
