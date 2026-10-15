@@ -22,6 +22,12 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 
 - [Reflection 1](Reflections/ref01.md)
 
+## Course links
+
+- [Course workbook](https://github.com/iotempire/iotempire-teaching/tree/main/full-classes/hsbi-databases-10d)
+- [Syllabus](https://github.com/iotempire/iotempire-teaching/blob/main/full-classes/hsbi-databases-10d/syllabus.md)
+- [Module index & roadmap](https://github.com/iotempire/iotempire-teaching/blob/main/full-classes/hsbi-databases-10d/modules/00-index.md)
+
 
 
 

@@ -1,6 +1,6 @@
 # Module 1: Introduction & Local-First Foundations
 
-Course: Databases (HSBI) · Session 1
+Course: Databases (HSBI) · Session 1 · [Module page](https://github.com/iotempire/iotempire-teaching/blob/main/full-classes/hsbi-databases-10d/modules/01-introduction-and-local-first.md) · [Syllabus](https://github.com/iotempire/iotempire-teaching/blob/main/full-classes/hsbi-databases-10d/syllabus.md) · [Back to portfolio](../README.md)
 
 ## Learning Goals
 
