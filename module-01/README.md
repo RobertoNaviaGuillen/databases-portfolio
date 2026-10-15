@@ -25,8 +25,8 @@ By the end of this module, I can:
 
 ## Task Pod
 
-- NAME — [portfolio](https://github.com/USER/databases-portfolio)
-- NAME — [portfolio](https://github.com/USER/databases-portfolio)
+- Leviscus Njeru — https://github.com/leviscusgnjeru/databases.git
+- Ian Okach — https://github.com/Okach81/Databases_ianportfolio
 
 ## Tasks
 
