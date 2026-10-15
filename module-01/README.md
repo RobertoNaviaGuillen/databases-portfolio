@@ -25,13 +25,15 @@ By the end of this module, I can:
 
 ## Task Pod
 
-- Leviscus Njeru: https://github.com/leviscusgnjeru/databases.git
-- Ian Okach: https://github.com/Okach81/Databases_ianportfolio
+- Leviscus Njeru: [portfolio](https://github.com/leviscusgnjeru/databases)
+- Ian Okach: [portfolio](https://github.com/Okach81/Databases_ianportfolio)
+
+**Audit of Leviscus Njeru's portfolio:** He documented Module 1 learning goals, his profile and SQL Island (`SELECT`, `WHERE`, `AND`/`OR`, `LIKE`, `IS NULL`, `UPDATE`) with a screenshot and an honest reflection on the environment setup; Tasks 3 (Python 3.14 + `uv` check), 4, 6 and 7 are still pending, and his main README is still the IoT template. His `.gitignore` also covers `*.db-wal`/`*.db-shm`, which I had missed, so I added them to mine.
 
 ## Tasks
 
 - [x] Task 1: Portfolio created from template, `.gitignore`, learning goals
-- [ ] Task 2: Git & Markdown proficiency in the pod
+- [x] Task 2: Git & Markdown proficiency in the pod (small commits, interlinks to the course and to my pod mates, [audit of Leviscus's portfolio](#task-pod))
 - [x] Task 3: Toolchain with `uv` ([check script](../uv-check.py), [output](uv-check-output.txt), [pyproject.toml](../pyproject.toml), [uv.lock](../uv.lock))
 - [x] Task 4: `sqlite3` shell tour ([commands](tour-commands.sql), [captured session](shell-tour.txt), [dump](tour.sql))
   - Ran with `sqlite3 module-01/tour.db < module-01/tour-commands.sql` to avoid the bracketed-paste problem on Windows. `tour.db` itself is not committed (ignored by `.gitignore`); it can be rebuilt from `tour.sql`.
