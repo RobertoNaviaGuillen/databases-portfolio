@@ -1,4 +1,4 @@
-# SQL Island — Task 5
+# SQL Island (Task 5)
 
 Game: [SQL Island](https://sql-island.informatik.uni-kl.de/) (played in English).
 
@@ -33,11 +33,11 @@ Game: [SQL Island](https://sql-island.informatik.uni-kl.de/) (played in English)
 
 ## 4. What surprised me? What is still confusing?
 
-- **Surprised:** how readable SQL is — `SELECT gold FROM inhabitant WHERE personid = 20` is almost an English sentence.
+- **Surprised:** how readable SQL is: `SELECT gold FROM inhabitant WHERE personid = 20` is almost an English sentence.
 - **Mistakes I made (and fixed):**
-  - Typing only the table name (`INHABITANT (name)`) — every query must start with a command like `SELECT`.
-  - Writing `"friendly"` without `WHERE state =` — SQL ignored it and returned every row.
-  - Forgetting quotes around text (`job = weaponsmith`) — without quotes SQL thinks it is a column name. Text needs `'...'`, numbers don't.
+  - Typing only the table name (`INHABITANT (name)`): every query must start with a command like `SELECT`.
+  - Writing `"friendly"` without `WHERE state =`, so SQL ignored it and returned every row.
+  - Forgetting quotes around text (`job = weaponsmith`): without quotes SQL thinks it is a column name. Text needs `'...'`, numbers don't.
   - On my keyboard the accent key gives `¨` instead of the straight quote `'`.
 - **Still confusing:** why `NULL` needs `IS NULL` instead of `= NULL`.
 

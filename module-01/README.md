@@ -1,4 +1,4 @@
-# Module 1 — Introduction & Local-First Foundations
+# Module 1: Introduction & Local-First Foundations
 
 Course: Databases (HSBI) · Session 1
 
@@ -6,10 +6,10 @@ Course: Databases (HSBI) · Session 1
 
 By the end of this module, I can:
 
-1. Explain how this class works — the CBL/PBL philosophy, the portfolio-based **project work** assessment, and the "moving bar" of a first-time course.
+1. Explain how this class works: the CBL/PBL philosophy, the portfolio-based **project work** assessment, and the "moving bar" of a first-time course.
 2. Set up my personal GitHub portfolio from the course template, with a clean first commit and a `.gitignore` that keeps databases and secrets out of Git.
-3. Set up the entire toolchain reproducibly with **`uv`** — one fixed Python plus SQLite, DuckDB, Datasette, and more — on Windows, macOS, or Linux, and verify it.
-4. Explain — with a measurement, not a slide — the difference between an **embedded** database and a **client/server** database, and why most local apps should not run a server.
+3. Set up the entire toolchain reproducibly with **`uv`** (one fixed Python plus SQLite, DuckDB, Datasette, and more) on Windows, macOS, or Linux, and verify it.
+4. Explain, with a measurement and not a slide, the difference between an **embedded** database and a **client/server** database, and why most local apps should not run a server.
 5. Load real rows into SQLite and query them from Python using **bound parameters**.
 6. Take a first LLM-generated query, run it, and begin the habit that defines this course: **verify before you trust**.
 
@@ -18,29 +18,29 @@ By the end of this module, I can:
 ## Personal Profile
 
 - **Programming experience / languages:** Python and C#. A decent amount of programming experience, but I'm rusty. I expect it to come back quickly once I start practicing again, and I learn fast.
-- **Prior SQL / databases used:** None yet — this course is my first contact with SQL and databases.
+- **Prior SQL / databases used:** None yet. This course is my first contact with SQL and databases.
 - **Python / command line / Git:** Comfortable with all three.
 - **Built a web app or run a server?** I have built some websites with the help of AI tools.
 - **My expectations from this class:** To really learn databases and SQL, and to build a good final project.
 
 ## Task Pod
 
-- Leviscus Njeru — https://github.com/leviscusgnjeru/databases.git
-- Ian Okach — https://github.com/Okach81/Databases_ianportfolio
+- Leviscus Njeru: https://github.com/leviscusgnjeru/databases.git
+- Ian Okach: https://github.com/Okach81/Databases_ianportfolio
 
 ## Tasks
 
-- [x] Task 1 — Portfolio created from template, `.gitignore`, learning goals
-- [ ] Task 2 — Git & Markdown proficiency in the pod
-- [x] Task 3 — Toolchain with `uv` ([check script](../uv-check.py), [output](uv-check-output.txt), [pyproject.toml](../pyproject.toml), [uv.lock](../uv.lock))
-- [x] Task 4 — `sqlite3` shell tour ([commands](tour-commands.sql), [captured session](shell-tour.txt), [dump](tour.sql))
-  - Ran with `sqlite3 module-01/tour.db < module-01/tour-commands.sql` to avoid the bracketed-paste problem on Windows. `tour.db` itself is not committed (ignored by `.gitignore`) — it can be rebuilt from `tour.sql`.
+- [x] Task 1: Portfolio created from template, `.gitignore`, learning goals
+- [ ] Task 2: Git & Markdown proficiency in the pod
+- [x] Task 3: Toolchain with `uv` ([check script](../uv-check.py), [output](uv-check-output.txt), [pyproject.toml](../pyproject.toml), [uv.lock](../uv.lock))
+- [x] Task 4: `sqlite3` shell tour ([commands](tour-commands.sql), [captured session](shell-tour.txt), [dump](tour.sql))
+  - Ran with `sqlite3 module-01/tour.db < module-01/tour-commands.sql` to avoid the bracketed-paste problem on Windows. `tour.db` itself is not committed (ignored by `.gitignore`); it can be rebuilt from `tour.sql`.
   - **Most useful dot-command:** `.dump`, because it turns the whole database (schema + data) into plain SQL text that can be committed to Git and used to rebuild the database anywhere.
-- [x] Task 5 — SQL Island ([answers + screenshot](sql-island.md)) — to be finished at home
-- [x] Task 6 — Load telemetry and query it
+- [x] Task 5: SQL Island ([answers + screenshot](sql-island.md)), to be finished at home
+- [x] Task 6: Load telemetry and query it
   - Scripts: [generate_telemetry.py](generate_telemetry.py) → `telemetry.csv` (7.8 MB), [load_telemetry.py](load_telemetry.py) → `telemetry.db` (CSV → SQLite using bound parameters `?`)
   - Queries: [queries.sql](queries.sql) · Results with timings: [query-results.txt](query-results.txt)
-  - **`telemetry.db`: 11 MB, 172,800 rows** ([db-size.txt](db-size.txt)) — not committed; rebuild with the two scripts.
+  - **`telemetry.db`: 11 MB, 172,800 rows** ([db-size.txt](db-size.txt)), not committed; rebuild with the two scripts.
 
     | Question | Result | Time |
     |---|---|---|
@@ -48,11 +48,11 @@ By the end of this module, I can:
     | Peak vibration | cnc-01: 2.398 · **cnc-02: 3.168** · cnc-03: 2.55 | 0.078 s |
     | Readings above the 2.0 mm/s alarm | 11,714 | 0.016 s |
 
-    cnc-02 has the highest peak — that is the bearing wear built into the generator.
-  - **Cloud cost:** 11 MB for two days is roughly 2 GB a year — a cloud setup (server + managed PostgreSQL + backend) would cost tens of euros every month, paid by Wittkamp, for data that one laptop answers in under 0.1 s with zero infrastructure.
-- [x] Task 7 — LLM-assisted SQL profiling ([all queries](llm-query.sql), [full output](llm-query-results.txt))
+    cnc-02 has the highest peak: that is the bearing wear built into the generator.
+  - **Cloud cost:** 11 MB for two days is roughly 2 GB a year. A cloud setup (server + managed PostgreSQL + backend) would cost tens of euros every month, paid by Wittkamp, for data that one laptop answers in under 0.1 s with zero infrastructure.
+- [x] Task 7: LLM-assisted SQL profiling ([all queries](llm-query.sql), [full output](llm-query-results.txt))
 
-### Task 7 — Verifying an LLM-generated query
+### Task 7: Verifying an LLM-generated query
 
 **LLM used:** Claude (Anthropic). **Prompt:**
 
@@ -84,11 +84,11 @@ ORDER BY avg_load DESC;
 
 | Variant | What it really means | Result |
 |---|---|---|
-| `ts > '2026-01-05 18:00:00'` | everything after Monday 18:00, **including Tuesday daytime** | cnc-02 on top — different answer |
-| `ts LIKE '%18%'` | any timestamp containing "18" (minutes, seconds…) | 18,102 rows instead of 43,200 — wrong |
-| `time(ts) >= '18:00' OR time(ts) < '06:00'` | "overnight" read as 18:00–06:00 | cnc-02 on top — different answer |
+| `ts > '2026-01-05 18:00:00'` | everything after Monday 18:00, **including Tuesday daytime** | cnc-02 on top, different answer |
+| `ts LIKE '%18%'` | any timestamp containing "18" (minutes, seconds…) | 18,102 rows instead of 43,200, wrong |
+| `time(ts) >= '18:00' OR time(ts) < '06:00'` | "overnight" read as 18:00-06:00 | cnc-02 on top, different answer |
 
-**Verification paragraph:** The model got the syntax, the `GROUP BY` and the ordering right, and it correctly used `time(ts)` to compare only the time of day instead of comparing `ts` as a full date string. What it got "wrong" is a silent assumption: it read *overnight (after 18:00)* as 18:00–midnight only, while a night shift would also include 00:00–06:00, and with that reading the ranking flips (cnc-02 becomes first instead of last). I verified it by running it on the real data, checking the row count against a hand calculation (43,200), profiling it with `EXPLAIN QUERY PLAN` (full scan), and running the alternative versions side by side. Lesson: the averages differ by only ~0.1, so the "ranking" is mostly noise — a query can run perfectly and still answer a different question than the one the user meant.
+**Verification paragraph:** The model got the syntax, the `GROUP BY` and the ordering right, and it correctly used `time(ts)` to compare only the time of day instead of comparing `ts` as a full date string. What it got "wrong" is a silent assumption: it read *overnight (after 18:00)* as 18:00-midnight only, while a night shift would also include 00:00-06:00, and with that reading the ranking flips (cnc-02 becomes first instead of last). I verified it by running it on the real data, checking the row count against a hand calculation (43,200), profiling it with `EXPLAIN QUERY PLAN` (full scan), and running the alternative versions side by side. Lesson: the averages differ by only ~0.1, so the "ranking" is mostly noise. A query can run perfectly and still answer a different question than the one the user meant.
 
 ## Reflection
 

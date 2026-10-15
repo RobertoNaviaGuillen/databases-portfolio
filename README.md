@@ -1,4 +1,4 @@
-# Databases Portfolio — Roberto Navia Guillen
+# Databases Portfolio: Roberto Navia Guillen
 
 Personal portfolio for the **Databases** course at **HSBI** (Hochschule Bielefeld).
 Here I document all my module work, lab tasks, reflections, and links to my peers' work.

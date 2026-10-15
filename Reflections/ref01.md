@@ -1,4 +1,4 @@
-# Reflection 1 — Module 1: Introduction & Local-First Foundations
+# Reflection 1 (Module 1): Introduction & Local-First Foundations
 
 Back to [Module 1](../module-01/README.md)
 
@@ -25,10 +25,10 @@ Not much. I already had an idea of what a database is, and it is close to what I
 
 Task 7 was the part I understood least, so this is what I want to take away from it:
 
-- An AI-generated query can **run without errors and still answer a different question**. The AI read "overnight (after 18:00)" as 18:00–midnight; if "overnight" means 18:00–06:00, the ranking of the machines flips.
+- An AI-generated query can **run without errors and still answer a different question**. The AI read "overnight (after 18:00)" as 18:00-midnight; if "overnight" means 18:00-06:00, the ranking of the machines flips.
 - To check it: run it on the real data, check that the number of rows makes sense (43,200 = 6 h × 1,200 readings/h × 2 days × 3 machines), look at the plan with `EXPLAIN QUERY PLAN`, and compare it with other possible versions.
 
-I still need more practice to do this on my own — I want to ask about it in the next session.
+I still need more practice to do this on my own. I want to ask about it in the next session.
 
 ## Help and extra work
 

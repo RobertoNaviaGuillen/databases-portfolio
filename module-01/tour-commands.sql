@@ -1,7 +1,7 @@
 -- Task 4: sqlite3 shell tour
 -- Run from the repo root:  sqlite3 module-01/tour.db < module-01/tour-commands.sql
 
--- SQL: create a table and add rows (SQL ends with ; — dot-commands do not)
+-- SQL: create a table and add rows (SQL ends with ; but dot-commands do not)
 DROP TABLE IF EXISTS reading;
 CREATE TABLE reading(machine TEXT, vib REAL);
 INSERT INTO reading VALUES ('cnc-01', 1.2), ('cnc-02', 2.4), ('cnc-01', 0.9);
