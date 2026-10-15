@@ -6,7 +6,9 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 ## Author
 
 - **Me:** Roberto Navia Guillen
-- **Task Pod members:** _to be added_
+- **Task Pod members:**
+  - Leviscus Njeru, [portfolio](https://github.com/leviscusgnjeru/databases)
+  - Ian Okach, [portfolio](https://github.com/Okach81/Databases_ianportfolio)
 - **Final project team:** _to be defined_
 - **Final project repository:** _to be defined_
 
