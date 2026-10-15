@@ -17,11 +17,11 @@ By the end of this module, I can:
 
 ## Personal Profile
 
-- **Programming experience / languages:** A decent amount of programming experience, but I'm rusty. I expect it to come back quickly once I start practicing again, and I learn fast.
-- **Prior SQL / databases used:** _TODO_
-- **Python / command line / Git:** _TODO_
-- **Built a web app or run a server?** _TODO_
-- **My expectations from this class:** _TODO_
+- **Programming experience / languages:** Python and C#. A decent amount of programming experience, but I'm rusty. I expect it to come back quickly once I start practicing again, and I learn fast.
+- **Prior SQL / databases used:** None yet — this course is my first contact with SQL and databases.
+- **Python / command line / Git:** Comfortable with all three.
+- **Built a web app or run a server?** I have built some websites with the help of AI tools.
+- **My expectations from this class:** To really learn databases and SQL, and to build a good final project.
 
 ## Task Pod
 
