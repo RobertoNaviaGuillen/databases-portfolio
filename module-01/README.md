@@ -36,7 +36,7 @@ By the end of this module, I can:
 - [x] Task 4 — `sqlite3` shell tour ([commands](tour-commands.sql), [captured session](shell-tour.txt), [dump](tour.sql))
   - Ran with `sqlite3 module-01/tour.db < module-01/tour-commands.sql` to avoid the bracketed-paste problem on Windows. `tour.db` itself is not committed (ignored by `.gitignore`) — it can be rebuilt from `tour.sql`.
   - **Most useful dot-command:** `.dump`, because it turns the whole database (schema + data) into plain SQL text that can be committed to Git and used to rebuild the database anywhere.
-- [ ] Task 5 — SQL Island
+- [x] Task 5 — SQL Island ([answers + screenshot](sql-island.md)) — to be finished at home
 - [ ] Task 6 — Load telemetry and query it
 - [ ] Task 7 — LLM-assisted SQL profiling
 
