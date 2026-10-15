@@ -17,7 +17,7 @@ By the end of this module, I can:
 
 ## Personal Profile
 
-- **Programming experience / languages:** _TODO_
+- **Programming experience / languages:** A decent amount of programming experience, but I'm rusty. I expect it to come back quickly once I start practicing again, and I learn fast.
 - **Prior SQL / databases used:** _TODO_
 - **Python / command line / Git:** _TODO_
 - **Built a web app or run a server?** _TODO_
