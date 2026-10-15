@@ -6,3 +6,6 @@
 *.parquet
 .env
 __pycache__/
+
+# generated data (rebuild with module-01/generate_telemetry.py)
+module-01/telemetry.csv

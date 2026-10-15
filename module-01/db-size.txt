@@ -1,0 +1,2 @@
+-rw-r--r-- 1 Flaku 197609 11M Oct 15 10:24 module-01/telemetry.db
+172800

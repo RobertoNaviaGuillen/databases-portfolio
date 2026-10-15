@@ -1,0 +1,28 @@
+.mode column
+.headers on
+.timer on
+
+-- 1. How many readings per machine?
+SELECT machine, COUNT(*) AS n FROM readings GROUP BY machine;
+machine    n
+-------  -----
+cnc-01   57600
+cnc-02   57600
+cnc-03   57600
+Run Time: real 0.066868 user 0.046875 sys 0.000000
+
+-- 2. What was the peak vibration per machine in these two days?
+SELECT machine, MAX(vib_rms) AS peak_vib FROM readings GROUP BY machine;
+machine  peak_vib
+-------  --------
+cnc-01      2.398
+cnc-02      3.168
+cnc-03       2.55
+Run Time: real 0.077673 user 0.062500 sys 0.015625
+
+-- 3. How many readings exceeded a 2.0 mm/s vibration alarm?
+SELECT COUNT(*) FROM readings WHERE vib_rms > 2.0;
+COUNT(*)
+--------
+   11714
+Run Time: real 0.015872 user 0.000000 sys 0.015625

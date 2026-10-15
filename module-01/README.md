@@ -37,7 +37,19 @@ By the end of this module, I can:
   - Ran with `sqlite3 module-01/tour.db < module-01/tour-commands.sql` to avoid the bracketed-paste problem on Windows. `tour.db` itself is not committed (ignored by `.gitignore`) — it can be rebuilt from `tour.sql`.
   - **Most useful dot-command:** `.dump`, because it turns the whole database (schema + data) into plain SQL text that can be committed to Git and used to rebuild the database anywhere.
 - [x] Task 5 — SQL Island ([answers + screenshot](sql-island.md)) — to be finished at home
-- [ ] Task 6 — Load telemetry and query it
+- [x] Task 6 — Load telemetry and query it
+  - Scripts: [generate_telemetry.py](generate_telemetry.py) → `telemetry.csv` (7.8 MB), [load_telemetry.py](load_telemetry.py) → `telemetry.db` (CSV → SQLite using bound parameters `?`)
+  - Queries: [queries.sql](queries.sql) · Results with timings: [query-results.txt](query-results.txt)
+  - **`telemetry.db`: 11 MB, 172,800 rows** ([db-size.txt](db-size.txt)) — not committed; rebuild with the two scripts.
+
+    | Question | Result | Time |
+    |---|---|---|
+    | Readings per machine | 57,600 each (cnc-01, cnc-02, cnc-03) | 0.067 s |
+    | Peak vibration | cnc-01: 2.398 · **cnc-02: 3.168** · cnc-03: 2.55 | 0.078 s |
+    | Readings above the 2.0 mm/s alarm | 11,714 | 0.016 s |
+
+    cnc-02 has the highest peak — that is the bearing wear built into the generator.
+  - **Cloud cost:** 11 MB for two days is roughly 2 GB a year — a cloud setup (server + managed PostgreSQL + backend) would cost tens of euros every month, paid by Wittkamp, for data that one laptop answers in under 0.1 s with zero infrastructure.
 - [ ] Task 7 — LLM-assisted SQL profiling
 
 ## Reflection
