@@ -1,0 +1,28 @@
+
+-- what tables exist now?
+.tables
+reading
+
+-- the CREATE statement that made it
+.schema reading
+CREATE TABLE reading(machine TEXT, vib REAL);
+
+-- readable, aligned columns with a header
+.mode column
+.headers on
+SELECT machine, max(vib) AS peak FROM reading GROUP BY machine;
+machine  peak
+-------  ----
+cnc-01    1.2
+cnc-02    2.4
+
+-- the same query, now timed (CPU time)
+.timer on
+SELECT machine, max(vib) AS peak FROM reading GROUP BY machine;
+machine  peak
+-------  ----
+cnc-01    1.2
+cnc-02    2.4
+Run Time: real 0.000099 user 0.000000 sys 0.000000
+.timer off
+.echo off
