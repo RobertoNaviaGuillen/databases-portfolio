@@ -21,6 +21,7 @@ By the end of this module, I can:
 - [x] Task 3: Injection drill ([injection_demo.py](injection_demo.py), [output](injection-results.txt))
 - [x] Task 4: One query, from algebra to plan ([check](task4-algebra-check.sql), [output](task4-results.txt))
 - [ ] Task 5 (Stretcher): window functions
+- [x] Harvest notes: [sql-notes.md](sql-notes.md) · Reflection: [ref03.md](../Reflections/ref03.md)
 
 ## Task 1: Ask the LLM, then check the plan
 
