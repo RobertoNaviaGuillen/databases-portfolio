@@ -15,7 +15,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 ## Table of Contents
 
 - [Module 1: Introduction & Local-First Foundations](module-01/README.md)
-- Module 2: Data Contracts & Legacy Schemas _(pending)_
+- [Module 2: Data Contracts & Legacy Schemas](module-02/README.md)
 - [Module 3: LLM-Assisted SQL & Query Profiling](module-03/README.md)
 - ...
 

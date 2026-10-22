@@ -1,0 +1,54 @@
+.mode column
+.headers on
+.timer on
+
+-- Defect 1: orphan maintenance jobs (machine_name not in machine)
+SELECT m.job_id, m.machine_name
+FROM maint_job m
+LEFT JOIN machine x ON m.machine_name = x.machine_name
+WHERE x.machine_name IS NULL;
+job_id  machine_name
+------  ------------
+     3  cnc-05
+Run Time: real 0.000881 user 0.000000 sys 0.000000
+
+-- Defect 2: duplicate natural keys in part
+SELECT part_no, COUNT(*) AS copies
+FROM part GROUP BY part_no HAVING COUNT(*) > 1;
+part_no  copies
+-------  ------
+P-1003        2
+Run Time: real 0.000367 user 0.000000 sys 0.000000
+
+-- Defect 3: unit_price stored as text, so a numeric comparison fails silently
+SELECT part_no, unit_price FROM part WHERE unit_price < '15';   -- 'text ordering', not money!
+-- the same question asked with real numbers:
+SELECT part_no, unit_price FROM part WHERE CAST(unit_price AS REAL) < 15;
+part_no  unit_price
+-------  ----------
+P-1001   12.50
+part_no  unit_price
+-------  ----------
+P-1001   12.50
+P-1003   9.90
+P-1003   9.90
+Run Time: real 0.000414 user 0.000000 sys 0.000000
+
+-- Defect 4: installed dates that are not dates
+SELECT machine_name, installed FROM machine
+WHERE installed NOT GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]';
+machine_name  installed
+------------  ---------
+RANDOM-NAME   unknown
+Run Time: real 0.000224 user 0.000000 sys 0.000000
+
+-- Defect 5: the m:n list only "joins" when it holds exactly one part
+SELECT j.job_id, p.description
+FROM maint_job j
+JOIN part p ON p.part_no = j.parts_used;   -- the list is not a key
+job_id     description
+------  -----------------
+     2  Coolant filter
+     2  Coolant filter
+     3  Ball bearing 6203
+Run Time: real 0.000298 user 0.000000 sys 0.000000

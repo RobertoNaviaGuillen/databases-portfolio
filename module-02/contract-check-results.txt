@@ -1,0 +1,25 @@
+
+Defect 1: a job on a machine that does not exist (cnc-05 -> machine_id 5)
+  Pydantic  : ACCEPTED  machine_id=5
+  Database  : REJECTED  machine_id=5: FOREIGN KEY constraint failed
+
+Defect 2: the duplicate part P-1003
+  Database  : REJECTED  second P-1003: UNIQUE constraint failed: part.part_no
+
+Defect 3: price stored as text
+  Database  : stored '48.00' as integer (NUMERIC column converts it, so '9.90' < 15 now compares as money)
+  Database  : parts under 15 -> [('P-1001',), ('P-1003',)]
+
+Defect 4: installed = 'unknown'
+  Pydantic  : REJECTED  installed='unknown': Input should be a valid date or datetime, input is too short
+  Database  : ACCEPTED  installed='unknown'
+
+Defect 5: two parts in one job, now as two rows in the junction table
+  Database  : job 1 parts -> [(1, 'Ball bearing 6203'), (1, 'Spindle belt')]
+  Database  : REJECTED  job 1 lists P-1001 twice: UNIQUE constraint failed: job_part.job_id, job_part.part_no
+  Database  : REJECTED  a part that does not exist: FOREIGN KEY constraint failed
+
+Extra rule: serial numbers must start with 'SN-'
+  Pydantic  : REJECTED  serial_no='88123': Value error, serial numbers must start with 'SN-'
+  Database  : ACCEPTED  serial_no='88123'
+  Database  : REJECTED  serial_no repeated: UNIQUE constraint failed: machine.serial_no

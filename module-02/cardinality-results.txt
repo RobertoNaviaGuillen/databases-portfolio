@@ -1,0 +1,58 @@
+.mode column
+.headers on
+.timer on
+
+-- Machine 1:n MaintenanceJob: fewer distinct machines than jobs, so one machine has several jobs
+SELECT COUNT(*) AS jobs, COUNT(DISTINCT machine_name) AS machines_used FROM maint_job;
+jobs  machines_used
+----  -------------
+   4              3
+Run Time: real 0.000768 user 0.000000 sys 0.000000
+SELECT machine_name, COUNT(*) AS jobs FROM maint_job GROUP BY machine_name ORDER BY jobs DESC;
+machine_name  jobs
+------------  ----
+cnc-01           2
+cnc-05           1
+cnc-02           1
+Run Time: real 0.000301 user 0.000000 sys 0.000000
+
+-- Technician 1:n MaintenanceJob: a technician performs many jobs (Beier: 2)
+SELECT technician, COUNT(*) AS jobs FROM maint_job GROUP BY technician ORDER BY jobs DESC;
+technician  jobs
+----------  ----
+Beier          2
+Werther        1
+Klaas          1
+Run Time: real 0.000208 user 0.000000 sys 0.000000
+
+-- MaintenanceJob m:n Part, side 1: how many parts does each job use? (the m:n hiding in a text column)
+SELECT job_id, parts_used,
+       LENGTH(parts_used) - LENGTH(REPLACE(parts_used, ',', '')) + 1 AS n_parts
+FROM maint_job;
+job_id   parts_used    n_parts
+------  -------------  -------
+     1  P-1001,P-1002        2
+     2  P-1003               1
+     3  P-1001               1
+     4
+Run Time: real 0.000172 user 0.000000 sys 0.000000
+
+-- MaintenanceJob m:n Part, side 2: in how many jobs does each part appear?
+SELECT p.part_no, COUNT(DISTINCT j.job_id) AS used_in_jobs
+FROM (SELECT DISTINCT part_no FROM part) p
+LEFT JOIN maint_job j ON ',' || j.parts_used || ',' LIKE '%,' || p.part_no || ',%'
+GROUP BY p.part_no;
+part_no  used_in_jobs
+-------  ------------
+P-1001              2
+P-1002              1
+P-1003              1
+Run Time: real 0.000316 user 0.000000 sys 0.000000
+
+-- Machine 1:1 nameplate (serial_no): every machine has exactly one serial number and no serial repeats
+SELECT COUNT(*) AS machines, COUNT(DISTINCT serial_no) AS distinct_serials,
+       COUNT(DISTINCT machine_name) AS distinct_names FROM machine;
+machines  distinct_serials  distinct_names
+--------  ----------------  --------------
+       4                 4               4
+Run Time: real 0.000239 user 0.000000 sys 0.000000
