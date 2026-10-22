@@ -1,0 +1,95 @@
+
+===== baseline (no extra index) =====
+
+[dashboard (range)]  median 161.163 ms
+    SCAN ol
+    SEARCH o USING INTEGER PRIMARY KEY (rowid=?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+    SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
+    USE TEMP B-TREE FOR GROUP BY
+    USE TEMP B-TREE FOR count(DISTINCT)
+    USE TEMP B-TREE FOR ORDER BY
+
+[single day]  median 3.322 ms
+    SCAN o
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[single day, date() wrapped]  median 7.736 ms
+    SCAN o
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[one product]  median 11.448 ms
+    SCAN order_line
+
+===== + ix_orders_ordered_on =====
+
+[dashboard (range)]  median 165.582 ms
+    SCAN ol
+    SEARCH o USING INTEGER PRIMARY KEY (rowid=?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+    SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
+    USE TEMP B-TREE FOR GROUP BY
+    USE TEMP B-TREE FOR count(DISTINCT)
+    USE TEMP B-TREE FOR ORDER BY
+
+[single day]  median 0.226 ms
+    SEARCH o USING INDEX ix_orders_ordered_on (ordered_on=?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[single day, date() wrapped]  median 9.484 ms
+    SCAN o
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[one product]  median 12.090 ms
+    SCAN order_line
+
+===== + ix_orderline_order =====
+
+[dashboard (range)]  median 1266.368 ms
+    SEARCH o USING INDEX ix_orders_ordered_on (ordered_on>? AND ordered_on<?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+    SEARCH ol USING INDEX ix_orderline_order (order_id=?)
+    SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
+    USE TEMP B-TREE FOR GROUP BY
+    USE TEMP B-TREE FOR count(DISTINCT)
+    USE TEMP B-TREE FOR ORDER BY
+
+[single day]  median 0.216 ms
+    SEARCH o USING INDEX ix_orders_ordered_on (ordered_on=?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[single day, date() wrapped]  median 7.840 ms
+    SCAN o
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[one product]  median 11.716 ms
+    SCAN order_line
+
+===== + ix_orderline_product =====
+
+[dashboard (range)]  median 1243.897 ms
+    SEARCH o USING INDEX ix_orders_ordered_on (ordered_on>? AND ordered_on<?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+    SEARCH ol USING INDEX ix_orderline_order (order_id=?)
+    SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
+    USE TEMP B-TREE FOR GROUP BY
+    USE TEMP B-TREE FOR count(DISTINCT)
+    USE TEMP B-TREE FOR ORDER BY
+
+[single day]  median 0.220 ms
+    SEARCH o USING INDEX ix_orders_ordered_on (ordered_on=?)
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[single day, date() wrapped]  median 8.416 ms
+    SCAN o
+    SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+
+[one product]  median 2.070 ms
+    SEARCH order_line USING INDEX ix_orderline_product (product_id=?)
+
+===== summary: median ms =====
+step                                   dashboard (range)                  single day  single day, date() wrapped                 one product
+baseline (no extra index)                        161.163                       3.322                       7.736                      11.448
++ ix_orders_ordered_on                           165.582                       0.226                       9.484                      12.090
++ ix_orderline_order                            1266.368                       0.216                       7.840                      11.716
++ ix_orderline_product                          1243.897                       0.220                       8.416                       2.070

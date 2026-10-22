@@ -1,0 +1,52 @@
+.mode column
+.headers on
+
+-- A. As written: join first, then filter
+SELECT COUNT(*) AS rows_a FROM (
+  SELECT o.order_id, o.ordered_on, c.name
+  FROM orders o JOIN customer c ON c.customer_id = o.customer_id
+  WHERE o.ordered_on = '2026-02-14');
+rows_a
+------
+   111
+
+-- B. Selection pushed down: filter orders first, then join
+SELECT COUNT(*) AS rows_b FROM (
+  SELECT o.order_id, o.ordered_on, c.name
+  FROM (SELECT * FROM orders WHERE ordered_on = '2026-02-14') o
+  JOIN customer c ON c.customer_id = o.customer_id);
+rows_b
+------
+   111
+
+-- C. Same rows? (EXCEPT both ways must return nothing)
+SELECT COUNT(*) AS only_in_a FROM (
+  SELECT o.order_id, o.ordered_on, c.name FROM orders o JOIN customer c ON c.customer_id = o.customer_id WHERE o.ordered_on = '2026-02-14'
+  EXCEPT
+  SELECT o.order_id, o.ordered_on, c.name FROM (SELECT * FROM orders WHERE ordered_on = '2026-02-14') o JOIN customer c ON c.customer_id = o.customer_id);
+only_in_a
+---------
+        0
+SELECT COUNT(*) AS only_in_b FROM (
+  SELECT o.order_id, o.ordered_on, c.name FROM (SELECT * FROM orders WHERE ordered_on = '2026-02-14') o JOIN customer c ON c.customer_id = o.customer_id
+  EXCEPT
+  SELECT o.order_id, o.ordered_on, c.name FROM orders o JOIN customer c ON c.customer_id = o.customer_id WHERE o.ordered_on = '2026-02-14');
+only_in_b
+---------
+        0
+
+-- D. The planner does the push-down by itself: both plans are identical
+EXPLAIN QUERY PLAN
+SELECT o.order_id, o.ordered_on, c.name
+FROM orders o JOIN customer c ON c.customer_id = o.customer_id
+WHERE o.ordered_on = '2026-02-14';
+QUERY PLAN
+|--SCAN o
+`--SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+EXPLAIN QUERY PLAN
+SELECT o.order_id, o.ordered_on, c.name
+FROM (SELECT * FROM orders WHERE ordered_on = '2026-02-14') o
+JOIN customer c ON c.customer_id = o.customer_id;
+QUERY PLAN
+|--SCAN orders
+`--SEARCH c USING INTEGER PRIMARY KEY (rowid=?)

@@ -1,0 +1,114 @@
+.mode column
+.headers on
+
+-- A. The LLM's query (as generated): year filter with strftime()
+.timer on
+SELECT c.city,
+       COUNT(DISTINCT c.customer_id) AS customers,
+       SUM(ol.qty * p.price)         AS revenue
+FROM customer c
+JOIN orders o      ON o.customer_id = c.customer_id
+JOIN order_line ol ON ol.order_id   = o.order_id
+JOIN product p     ON p.product_id  = ol.product_id
+WHERE strftime('%Y', o.ordered_on) = '2025'
+GROUP BY c.city
+ORDER BY revenue DESC;
+  city     customers   revenue
+---------  ---------  ----------
+Bielefeld        500  11242176.0
+Gütersloh        500   8422344.0
+Münster          500   5493504.0
+Paderborn        500   2815656.0
+Run Time: real 0.260990 user 0.125000 sys 0.000000
+.timer off
+
+EXPLAIN QUERY PLAN
+SELECT c.city,
+       COUNT(DISTINCT c.customer_id) AS customers,
+       SUM(ol.qty * p.price)         AS revenue
+FROM customer c
+JOIN orders o      ON o.customer_id = c.customer_id
+JOIN order_line ol ON ol.order_id   = o.order_id
+JOIN product p     ON p.product_id  = ol.product_id
+WHERE strftime('%Y', o.ordered_on) = '2025'
+GROUP BY c.city
+ORDER BY revenue DESC;
+QUERY PLAN
+|--SCAN ol
+|--SEARCH o USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
+|--USE TEMP B-TREE FOR GROUP BY
+|--USE TEMP B-TREE FOR count(DISTINCT)
+`--USE TEMP B-TREE FOR ORDER BY
+
+-- B. Reference query from the workbook: year filter as a plain range on the column
+.timer on
+SELECT c.city, COUNT(DISTINCT c.customer_id) AS customers,
+       SUM(ol.qty * p.price) AS revenue
+FROM customer c
+JOIN orders o     ON o.customer_id = c.customer_id
+JOIN order_line ol ON ol.order_id = o.order_id
+JOIN product p    ON p.product_id = ol.product_id
+WHERE o.ordered_on >= '2025-01-01' AND o.ordered_on < '2026-01-01'
+GROUP BY c.city
+ORDER BY revenue DESC;
+  city     customers   revenue
+---------  ---------  ----------
+Bielefeld        500  11242176.0
+Gütersloh        500   8422344.0
+Münster          500   5493504.0
+Paderborn        500   2815656.0
+Run Time: real 0.149934 user 0.046875 sys 0.062500
+.timer off
+
+EXPLAIN QUERY PLAN
+SELECT c.city, COUNT(DISTINCT c.customer_id) AS customers,
+       SUM(ol.qty * p.price) AS revenue
+FROM customer c
+JOIN orders o     ON o.customer_id = c.customer_id
+JOIN order_line ol ON ol.order_id = o.order_id
+JOIN product p    ON p.product_id = ol.product_id
+WHERE o.ordered_on >= '2025-01-01' AND o.ordered_on < '2026-01-01'
+GROUP BY c.city
+ORDER BY revenue DESC;
+QUERY PLAN
+|--SCAN ol
+|--SEARCH o USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH c USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH p USING INTEGER PRIMARY KEY (rowid=?)
+|--USE TEMP B-TREE FOR GROUP BY
+|--USE TEMP B-TREE FOR count(DISTINCT)
+`--USE TEMP B-TREE FOR ORDER BY
+
+-- C. Sanity checks
+-- how many orders are in 2025 vs. the whole table?
+SELECT COUNT(*) AS orders_2025 FROM orders WHERE ordered_on >= '2025-01-01' AND ordered_on < '2026-01-01';
+orders_2025
+-----------
+      40575
+SELECT MIN(ordered_on) AS first_day, MAX(ordered_on) AS last_day FROM orders;
+first_day    last_day
+----------  ----------
+2025-01-01  2026-06-24
+-- does every city really have 500 customers?
+SELECT city, COUNT(*) AS customers_in_table FROM customer GROUP BY city;
+  city     customers_in_table
+---------  ------------------
+Bielefeld                 500
+Gütersloh                 500
+Münster                   500
+Paderborn                 500
+-- without DISTINCT the "customers" column counts order lines, not people
+SELECT c.city, COUNT(c.customer_id) AS not_distinct
+FROM customer c
+JOIN orders o      ON o.customer_id = c.customer_id
+JOIN order_line ol ON ol.order_id   = o.order_id
+WHERE o.ordered_on >= '2025-01-01' AND o.ordered_on < '2026-01-01'
+GROUP BY c.city;
+  city     not_distinct
+---------  ------------
+Bielefeld         40908
+Gütersloh         40464
+Münster           40464
+Paderborn         40464
