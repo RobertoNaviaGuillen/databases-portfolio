@@ -21,6 +21,7 @@ By the end of this module, I can:
 - [x] Task 1: Reconstruct the ER model: [er-audit.md](er-audit.md) (entities, Mermaid ER diagram, cardinalities proved with [counts](cardinality.sql), [output](cardinality-results.txt))
 - [x] Task 2: Integrity defects proved with queries: [defects.sql](defects.sql), [output](defects-results.txt)
 - [x] Task 3: Data contract: [contract.py](contract.py), emitted DDL [contract-ddl.sql](contract-ddl.sql), and a check that throws the legacy defects at it: [contract_check.py](contract_check.py), [output](contract-check-results.txt)
+- [x] Reflection: [ref02.md](../Reflections/ref02.md)
 - [ ] Task 4 (Stretcher): inheritance
 - [ ] Task 5 (Stretcher): Mermaid lab
 
