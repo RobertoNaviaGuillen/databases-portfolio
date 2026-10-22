@@ -1,0 +1,28 @@
+-- Module 2, Task B: prove one sketch (work orders m:n parts) with CREATE TABLE + COUNT
+-- Run from the repo root:  sqlite3 :memory: ".read module-02/er-proof.sql"
+.bail on
+.echo on
+.mode column
+.headers on
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE work_order (work_order_id INTEGER PRIMARY KEY, opened_on TEXT NOT NULL);
+CREATE TABLE part       (part_no TEXT PRIMARY KEY, description TEXT NOT NULL);
+CREATE TABLE work_order_part (
+    work_order_id INTEGER NOT NULL REFERENCES work_order(work_order_id),
+    part_no       TEXT    NOT NULL REFERENCES part(part_no),
+    PRIMARY KEY (work_order_id, part_no)          -- a part is listed only once per order
+);
+
+INSERT INTO work_order VALUES (1, '2026-10-01'), (2, '2026-10-02');
+INSERT INTO part VALUES ('P-1001', 'Ball bearing'), ('P-1002', 'Spindle belt');
+INSERT INTO work_order_part VALUES (1, 'P-1001'), (1, 'P-1002'), (2, 'P-1001');
+
+-- one order uses many parts (order 1 -> 2 parts)
+SELECT work_order_id, COUNT(*) AS parts FROM work_order_part GROUP BY work_order_id;
+-- one part is used by many orders (P-1001 -> 2 orders)
+SELECT part_no, COUNT(*) AS orders FROM work_order_part GROUP BY part_no;
+
+-- both sides > 1, so the relationship is m:n. The junction table also enforces the rule
+-- "a part is listed only once per order" (a missing part is rejected by the foreign key, see contract-check-results.txt):
+INSERT INTO work_order_part VALUES (1, 'P-1001');   -- same part twice on one order: rejected

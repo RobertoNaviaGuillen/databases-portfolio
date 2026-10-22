@@ -14,7 +14,8 @@ By the end of this module, I can:
 
 ## Tasks
 
-- [ ] Pod Study, Tasks A-B (study log, four sketches): to do.
+- [ ] Pod Study, Task A (study log: references, searches, LLM Q&A): to do.
+- [x] Pod Study, Task B (four sketches + one proof): [er-examples.md](er-examples.md), [er-proof.sql](er-proof.sql) ([output](er-proof-results.txt))
 - [x] Pod Study, Task C (share with another pod): EER overlap example, documented in [study-log.md](study-log.md#task-c-explain--share-with-another-pod).
 - [x] Setup: [legacy-setup.sql](legacy-setup.sql) builds `legacy.db` (not committed; rebuild with `sqlite3 module-02/legacy.db ".read module-02/legacy-setup.sql"`).
 - [x] Task 1: Reconstruct the ER model: [er-audit.md](er-audit.md) (entities, Mermaid ER diagram, cardinalities proved with [counts](cardinality.sql), [output](cardinality-results.txt))

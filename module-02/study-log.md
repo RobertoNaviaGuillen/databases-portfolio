@@ -8,7 +8,7 @@ _To be completed: references used, things I googled, remarkable findings, LLM Q&
 
 ## Task B: From words to sketch
 
-_To be completed: the four sketches (1:1, 1:n, m:n, entity vs. attribute) and one `CREATE TABLE` + `COUNT` proof._
+Done in [er-examples.md](er-examples.md): my answers to the four scenarios (two right, two wrong, with why), the four sketches, and the `CREATE TABLE` + `COUNT` proof of the m:n sketch ([er-proof.sql](er-proof.sql)).
 
 ## Task C: Explain & share with another pod
 
