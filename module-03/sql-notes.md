@@ -67,9 +67,9 @@ The structure (π outside, σ inside) and the π part were right this time; I sw
 
 ## Task C: Explain & share (with my pod mates)
 
-I compared my plan safari with [Leviscus Njeru](https://github.com/leviscusgnjeru/databases) ([his Module 3 notes](https://github.com/leviscusgnjeru/databases/blob/main/Module03/sql-notes.md)) and [Ian Okach](https://github.com/Okach81/Databases_ianportfolio).
+I compared my plan safari with [Leviscus Njeru](https://github.com/leviscusgnjeru/databases) ([his Module 3 notes](https://github.com/leviscusgnjeru/databases/blob/main/Module03/sql-notes.md)).
 
-**SQLite version:** mine is 3.54.0. Leviscus did not record his. Ian has not documented his plans yet, so I ran my [plan-safari.sql](plan-safari.sql) against a copy of **his** `legacy.db`: the plans were identical to mine (same data, same SQLite build on my machine).
+**SQLite version:** mine is 3.54.0. Leviscus did not record his.
 
 | Query | Leviscus | Me |
 |---|---|---|
