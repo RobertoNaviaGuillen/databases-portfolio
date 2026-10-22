@@ -4,7 +4,42 @@ Back to [Module 2](README.md)
 
 ## Task A: Study in my pod
 
-_To be completed: references used, things I googled, remarkable findings, LLM Q&A with verification, and my two best ER sketches._
+### 1. References I used
+
+| Source | The one concept I understood best from it |
+|---|---|
+| [Module 2 workbook](https://github.com/iotempire/iotempire-teaching/blob/main/full-classes/hsbi-databases-10d/modules/02-data-contracts-and-legacy-schemas.md) | The cardinality table: 1:1, 1:n and m:n, and how each becomes a table |
+| My pod's explanations ([Leviscus Njeru](https://github.com/leviscusgnjeru/databases), Ian Okach, Chanbopha Rin) | The EER overlap example: one person can be both student and lecturer |
+| Explaining it back to a pod mate | **Every m:n relationship needs a junction (bridge) table.** Having to say it out loud is when it clicked |
+| AI assistant (Claude), see the Q&A below | Entity vs. attribute: if it repeats across many rows and has its own data, it is a table |
+
+### 2. Things I googled
+
+Almost nothing; I used the AI assistant instead of searching, and checked its answers against the workbook and against queries on `legacy.db`.
+
+### 3. Remarkable things
+
+- **Tables need a lot of attention to detail.** Small design shortcuts (a name instead of a foreign key, a comma list, a number stored as text) let wrong and overlapping information in, and the database does not complain.
+- **Defects multiply each other.** The duplicate `P-1003` row made job 2 appear twice in the join, while job 1 (`P-1001,P-1002`) silently disappeared.
+- **SQLite accepted `'unknown'` in a `DATE` column**, and it ignores foreign keys unless `PRAGMA foreign_keys = ON`.
+- My own wrong answers in Task B (a list column for m:n, technician as plain text) were exactly the legacy schema's defects: the same mistakes the original designer made.
+
+### 4. LLM Q&A (Claude), and how I verified it
+
+| My question | Summary of the answer | How I verified it |
+|---|---|---|
+| What are an entity, an attribute and a relationship, and what do 1:1, 1:n and m:n mean? | An entity is a thing with its own existence (Machine, Part, Technician); an attribute describes it (serial number); cardinality says "how many with how many" (passport, mother and children, students and courses) | Proved each cardinality on `legacy.db` with counts ([cardinality.sql](cardinality.sql)): 4 jobs on 3 machines (1:n), job 1 with 2 parts **and** P-1001 in 2 jobs (m:n) |
+| Which errors does the legacy database have? (after I listed the ones I saw by eye) | Confirmed my three (`unknown` date, duplicate part, suspicious `RANDOM-NAME`) and pointed to three I missed (orphan `cnc-05`, comma list, price as text) | Did not take the list on trust: every defect is proved with a query and its result ([defects.sql](defects.sql)) |
+| Is my pod's EER overlap diagram correct? | Correct; it does not show total vs. partial specialization, and classic EER draws overlap with a circle and an "o" | Compared with the workbook's EER section and with Leviscus's own study log, which notes the same total/partial gap |
+
+**Where the AI was over-confident:** it called machine ↔ serial number an "accidental 1:1" in the legacy schema. The counts only show 4 machines with 4 distinct serials **in this sample**; nothing in the schema enforces it (`serial_no` is not `UNIQUE`). Leviscus wrote that the legacy schema represents no 1:1 at all. Both readings are defensible, and the count alone cannot prove a rule.
+
+### 5. My two best ER sketches
+
+I did not hunt for external sketches; the two that taught me the most came from my pod and from this module's own data:
+
+1. **EER overlap example** by Leviscus Njeru (shown in Task C below): it taught me supertype/subtype and that subtypes can overlap.
+2. **The reconstructed maintenance model** in [er-audit.md](er-audit.md#2-reconstructed-er-diagram-what-the-designer-meant): it taught me what the junction table `JOB_PART` looks like in a real repair, next to the broken `parts_used` column it replaces.
 
 ## Task B: From words to sketch
 
