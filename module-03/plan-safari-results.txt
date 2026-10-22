@@ -1,0 +1,38 @@
+DROP INDEX IF EXISTS ix_job_tech;
+
+-- Round 1: no index at all (the legacy tables have no primary key and no index)
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE technician = 'Beier';
+QUERY PLAN
+`--SCAN maint_job
+EXPLAIN QUERY PLAN SELECT * FROM machine WHERE machine_name = 'cnc-02';
+QUERY PLAN
+`--SCAN machine
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE technician LIKE '%ei%';
+QUERY PLAN
+`--SCAN maint_job
+
+-- Round 2: add one index on technician and re-run all three
+CREATE INDEX ix_job_tech ON maint_job(technician);
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE technician = 'Beier';
+QUERY PLAN
+`--SEARCH maint_job USING INDEX ix_job_tech (technician=?)
+EXPLAIN QUERY PLAN SELECT * FROM machine WHERE machine_name = 'cnc-02';
+QUERY PLAN
+`--SCAN machine
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE technician LIKE '%ei%';
+QUERY PLAN
+`--SCAN maint_job
+
+-- Round 3: break it on purpose, WHERE clauses that defeat the index anyway
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE lower(technician) = 'beier';   -- function around the column
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE technician LIKE 'Bei%';        -- no leading wildcard: still not used (LIKE is case-insensitive)
+EXPLAIN QUERY PLAN SELECT * FROM maint_job WHERE technician >= 'Bei' AND technician < 'Bej';  -- the same prefix as a range: index used
+
+-- leave legacy.db as Module 2 built it
+DROP INDEX ix_job_tech;
+QUERY PLAN
+`--SCAN maint_job
+QUERY PLAN
+`--SCAN maint_job
+QUERY PLAN
+`--SEARCH maint_job USING INDEX ix_job_tech (technician>? AND technician<?)

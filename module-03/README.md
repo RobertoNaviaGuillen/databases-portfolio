@@ -14,7 +14,9 @@ By the end of this module, I can:
 
 ## Tasks
 
-- [ ] Pod Study, Tasks A-C (plan safari, algebra check, share): in class with the pod; they use `Module02/legacy.db`, which I have not built yet (Module 2 is still pending).
+- [x] Pod Study, Task A (plan safari on `module-02/legacy.db`): [plan-safari.sql](plan-safari.sql), [output](plan-safari-results.txt), predictions vs. plans in [sql-notes.md](sql-notes.md#task-a-plan-safari-on-module-2s-legacydb)
+- [x] Pod Study, Task B (algebra check): my two attempts vs. the LLM in [sql-notes.md](sql-notes.md#task-b-algebra-check)
+- [ ] Pod Study, Task C (share with another pod): in class.
 - [x] Setup: [setup.sql](setup.sql) builds `warehouse.db` (not committed; rebuild with `sqlite3 module-03/warehouse.db ".read module-03/setup.sql"`): 2,000 customers, 500 products, 60,000 orders, 240,000 order lines.
 - [x] Task 1: LLM query and plan ([queries](task1-llm-query.sql), [output](task1-results.txt))
 - [x] Task 2: Index benchmark ([bench.py](bench.py), [output](bench-results.txt))
