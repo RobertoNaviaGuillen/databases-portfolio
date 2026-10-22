@@ -65,6 +65,33 @@ Query A from the safari: `SELECT * FROM maint_job WHERE technician = 'Beier';`
 
 The structure (π outside, σ inside) and the π part were right this time; I swapped the condition and the table. **Trick:** what comes after `WHERE` goes under σ; what comes after `FROM` goes inside the parentheses.
 
+## Task C: Explain & share (with my pod mates)
+
+I compared my plan safari with [Leviscus Njeru](https://github.com/leviscusgnjeru/databases) ([his Module 3 notes](https://github.com/leviscusgnjeru/databases/blob/main/Module03/sql-notes.md)) and [Ian Okach](https://github.com/Okach81/Databases_ianportfolio).
+
+**SQLite version:** mine is 3.54.0. Leviscus did not record his. Ian has not documented his plans yet, so I ran my [plan-safari.sql](plan-safari.sql) against a copy of **his** `legacy.db`: the plans were identical to mine (same data, same SQLite build on my machine).
+
+| Query | Leviscus | Me |
+|---|---|---|
+| `technician = 'Beier'` | SCAN → SEARCH with `ix_job_tech` | SCAN → SEARCH |
+| `machine_name = 'cnc-02'` | SCAN → SCAN | SCAN → SCAN |
+| `technician LIKE '%ei%'` | SCAN → SCAN | SCAN → SCAN |
+| function on the column | `UPPER(technician)` → SCAN | `lower(technician)` → SCAN |
+
+**Same plans for every query we both ran.** Differences were in what we tested and recorded:
+
+- I wrote my **predictions** down first (and got B wrong); Leviscus recorded observations only.
+- I additionally found that `LIKE 'Bei%'` (no leading wildcard) **also** stays `SCAN`, while the same prefix written as a range (`>= 'Bei' AND < 'Bej'`) uses the index. That surprised the pod most.
+- Leviscus's algebra example, π<sub>technician</sub>(σ<sub>machine_name='cnc-01'</sub>(maint_job)), is correct: it returns Beier and Werther on the sample data.
+
+**What we agree on:**
+
+1. The plan is the evidence of what SQLite does: `SCAN` reads everything, `SEARCH` uses an index or key.
+2. An index helps only queries on **its own column**, used **as is**: a different table, a leading wildcard or a function around the column all stay `SCAN`.
+3. A changed plan is not, on its own, proof of a faster query; timing is separate evidence (my warehouse benchmark had an index that made a query ~8× slower).
+
+**Still open:** why SQLite's case-insensitive `LIKE` does not use a normal index even for a prefix (`'Bei%'`), and what kind of index would let it.
+
 ## Predictions vs. reality
 
 | Prediction | Reality | Why |
