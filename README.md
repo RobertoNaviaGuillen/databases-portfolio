@@ -9,6 +9,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 - **Task Pod members:**
   - Leviscus Njeru, [portfolio](https://github.com/leviscusgnjeru/databases)
   - Ian Okach, [portfolio](https://github.com/Okach81/Databases_ianportfolio)
+  - Chanbopha Rin, [GitHub profile](https://github.com/chanbopharin)
 - **Final project team:** _to be defined_
 - **Final project repository:** _to be defined_
 

@@ -27,6 +27,9 @@ By the end of this module, I can:
 
 - Leviscus Njeru: [portfolio](https://github.com/leviscusgnjeru/databases)
 - Ian Okach: [portfolio](https://github.com/Okach81/Databases_ianportfolio)
+- Chanbopha Rin: [GitHub profile](https://github.com/chanbopharin)
+
+I joined this pod on 15 October 2026.
 
 **Audit of Leviscus Njeru's portfolio:** He documented Module 1 learning goals, his profile and SQL Island (`SELECT`, `WHERE`, `AND`/`OR`, `LIKE`, `IS NULL`, `UPDATE`) with a screenshot and an honest reflection on the environment setup; Tasks 3 (Python 3.14 + `uv` check), 4, 6 and 7 are still pending, and his main README is still the IoT template. His `.gitignore` also covers `*.db-wal`/`*.db-shm`, which I had missed, so I added them to mine.
 
