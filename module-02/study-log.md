@@ -12,7 +12,7 @@ _To be completed: the four sketches (1:1, 1:n, m:n, entity vs. attribute) and on
 
 ## Task C: Explain & share with another pod
 
-**When and who:** 17 October 2026, the day I joined my Task Pod ([Leviscus Njeru](https://github.com/leviscusgnjeru/databases), Ian Okach, Chanbopha Rin). I took part in the pod discussion and in the exchange with the neighbouring pod. Honestly, I did not fully understand the example during the discussion; I understood it afterwards by reviewing it on my own.
+**When and who:** 17 October 2026, two days after I joined my Task Pod on 15 October ([Leviscus Njeru](https://github.com/leviscusgnjeru/databases), Ian Okach, Chanbopha Rin). I took part in the pod discussion and in the exchange with the neighbouring pod. Honestly, I did not fully understand the example during the discussion; I understood it afterwards by reviewing it on my own.
 
 **The shared image:** the pod pair chose an EER example about a university. The image below was made and posted by **Leviscus Njeru** in our Discord channel (`#in-class-tasks`, 17 October 2026, 19:37); it is reused here with credit, as the image our pods agreed on. His documentation of the discussion is in [his study log](https://github.com/leviscusgnjeru/databases/blob/main/Module02/study-log.md).
 
