@@ -28,6 +28,7 @@ By the end of this module, I can:
 - Leviscus Njeru: [portfolio](https://github.com/leviscusgnjeru/databases)
 - Ian Okach: [portfolio](https://github.com/Okach81/Databases_ianportfolio)
 - Chanbopha Rin: [GitHub profile](https://github.com/chanbopharin)
+- Erick Liebisch: [portfolio](https://github.com/ErickLiebisch/databases-portfolio)
 
 I joined this pod on 15 October 2026.
 

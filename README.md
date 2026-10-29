@@ -10,6 +10,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
   - Leviscus Njeru, [portfolio](https://github.com/leviscusgnjeru/databases)
   - Ian Okach, [portfolio](https://github.com/Okach81/Databases_ianportfolio)
   - Chanbopha Rin, [GitHub profile](https://github.com/chanbopharin)
+  - Erick Liebisch, [portfolio](https://github.com/ErickLiebisch/databases-portfolio)
 - **Final project team:** _to be defined_
 - **Final project repository:** _to be defined_
 
