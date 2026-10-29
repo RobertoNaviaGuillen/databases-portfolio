@@ -21,4 +21,3 @@ The biggest surprise was the index that made everything slower. The LLM suggeste
 ## Help and extra work
 
 - I used **Claude (AI)** as an assistant to build the database, write the benchmark script and run the tasks, and it explained each result to me in simple terms.
-- Still to do: the Pod Study tasks (A-C) with my pod, which need the Module 2 database, and practising relational algebra before the checkpoint.
