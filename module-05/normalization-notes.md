@@ -1,0 +1,131 @@
+# Module 5: Normalization notes
+
+Back to [Module 5](README.md)
+
+## Round 1: See it (dependencies and two pictures)
+
+The five-row extract:
+
+| job_id | machine_id | site | technician | part_no | part_price |
+|---|---|---|---|---|---|
+| 1 | cnc-01 | Gütersloh | tech-0 | P-0001 | 6.00 |
+| 1 | cnc-01 | Gütersloh | tech-0 | P-0002 | 7.00 |
+| 2 | cnc-02 | Gütersloh | tech-1 | P-0001 | 6.00 |
+| 2 | cnc-02 | Gütersloh | tech-1 | P-0003 | 8.50 |
+| 3 | cnc-01 | Gütersloh | tech-0 | P-0003 | 8.50 |
+
+### My functional dependencies
+
+| FD | Guaranteed by the domain or only observed? | My reasoning |
+|---|---|---|
+| `machine_id → site` | **domain** | A machine stands in one place at a time. It *can* be moved to another city, but then the fact changes for the machine as a whole; that is an update, not a second site. My first thought was "the same machine could be used in different cities", which is exactly why the site must be stored once: if it is copied on every job row, a move leaves some rows in the old city (the update anomaly in Round 2). |
+| `part_no → part_price` | **domain** | A part number has one current price. (If prices changed over time and old jobs had to keep the old price, the price would belong to the job-part row instead; this studio assumes one price.) |
+| `job_id → machine_id`, `job_id → technician` | **domain** | One maintenance job is done on one machine by one technician. |
+| `machine_id → technician` | **only observed** | In the five rows `cnc-01` always appears with `tech-0`, but nothing in the domain says a machine always gets the same technician. My first answer was "yes", with the same doubt as for the site. The 200k table proves it is an accident: `cnc-02` was serviced by all 7 technicians. |
+
+**Candidate key:** `(job_id, part_no)`. Neither attribute alone determines the row: a job has several parts, and a part is used by several jobs.
+
+### Checking the FDs on the 200k table
+
+[round1-fd-check.sql](round1-fd-check.sql) counts, for each candidate FD `X → Y`, how many `X` values have more than one `Y` ([output](round1-results.txt)):
+
+| FD | `X` values that break it |
+|---|---|
+| `machine_id → site` | 0 |
+| `part_no → part_price` | 0 |
+| `job_id → technician` | 0 |
+| `job_id → machine_id` | 0 |
+| `machine_id → technician` | **50** (every machine has 7 different technicians) |
+
+Zero violations only means the FD holds **in this data**; whether it *must* hold is a domain decision. One violation is enough to prove an FD does not hold.
+
+### Two ER sketches
+
+**The table as it is:** one entity, every fact on every row.
+
+```mermaid
+erDiagram
+    FLAT_JOBPART {
+        int job_id PK
+        text part_no PK
+        text machine_id
+        text site
+        text technician
+        real part_price
+    }
+```
+
+Hidden inside it: `job_id → machine_id → site` (transitive) and `part_no → part_price` (partial: depends on only half of the key).
+
+**The schema it should be (3NF):**
+
+```mermaid
+erDiagram
+    MACHINE ||--o{ JOB : "is serviced in"
+    JOB ||--|{ JOB_PART : "uses"
+    PART ||--o{ JOB_PART : "is used in"
+    MACHINE {
+        text machine_id PK
+        text site
+    }
+    JOB {
+        int job_id PK
+        text machine_id FK
+        text technician
+        text done_on
+    }
+    PART {
+        text part_no PK
+        real part_price
+    }
+    JOB_PART {
+        int job_id PK,FK
+        text part_no PK,FK
+    }
+```
+
+**Gate question, "which arrow disappears in the second one?":** the arrows from the half-key `part_no → part_price` and from the non-key `machine_id → site` no longer exist inside a job-part row. In the second diagram every attribute depends only on the key of its own table.
+
+### Diff against the LLM
+
+**Prompt** (from the workbook): *"Here is a flat table: `<columns and the five rows>`. List the functional dependencies you can infer, and mark which are domain facts and which are only observed in these rows."*
+
+**LLM used:** Claude. Its list: `job_id → machine_id, technician`, `machine_id → site`, `part_no → part_price` as domain facts; `machine_id → technician`, `part_price → part_no` and `technician → machine_id` as true in the five rows only; `site → anything` does not hold.
+
+| Point | Me | LLM | Who is right |
+|---|---|---|---|
+| `machine_id → site` | yes, with a doubt about moving machines | domain fact | both; moving a machine is an update of the one fact |
+| `machine_id → technician` | yes at first | only observed | **the LLM**; the 200k data shows 7 technicians per machine |
+| `part_price → part_no` | not considered | only observed (6.00 only appears with P-0001) | the LLM; two parts can have the same price, so it is an accident |
+
+## Round 2: Break it (the three anomalies)
+
+Script: [round2-anomalies.sql](round2-anomalies.sql) · Output: [round2-results.txt](round2-results.txt)
+
+| Anomaly | Statement | What happened |
+|---|---|---|
+| **Update** | `UPDATE flat5 SET site = 'Bielefeld' WHERE machine_id = 'cnc-01';` | **3 rows** touched to change **one** fact. When a second session then "fixes" only job 3 back to Gütersloh, `cnc-01` is in **two cities at once** (`SELECT DISTINCT` returns both). |
+| **Insert** | `INSERT INTO flat5(part_no, part_price) VALUES ('P-0004', 9.75);` | A new part cannot be recorded without a job: the only way is a row with `job_id`, `machine_id`, `site` and `technician` all `NULL`. |
+| **Delete** | `DELETE FROM flat5 WHERE job_id = 1 AND part_no = 'P-0002';` | P-0002 was used only by job 1. Deleting that row also deleted **the price of P-0002** (7.00): 0 rows still know it. |
+
+## Round 3: Build it (200k rows and 3NF)
+
+[setup.sql](setup.sql) builds `flat_jobpart`; [normalize.sql](normalize.sql) decomposes it with `PRAGMA foreign_keys = ON` ([output](normalize-results.txt)).
+
+| Table | Rows |
+|---|---|
+| `flat_jobpart` | 200,000 |
+| `machine` | 50 |
+| `part` | 10 |
+| `job` | 20,000 |
+| `job_part` | **200,000** (matches the flat table) |
+
+- **With foreign keys ON, the decomposition still loads** and `PRAGMA foreign_key_check` reports no orphans, because the parent tables (`machine`, `part`) are filled before the child tables (`job`, `job_part`).
+- **The `DISTINCT` assumption held:** inserting into `job` with `job_id` as primary key did not fail, so every job really has exactly one machine, technician and date.
+- **Gate question, "why does `part` have 10 rows, not 40?":** the generator multiplies 20,000 jobs by `k = 1..10` only, and the part number is `(k % 40) + 1`, so it only reaches `P-0002` to `P-0011`. The `% 40` suggests 40 parts, but with only 10 values of `k` it never wraps around.
+
+| Form | Rule | What it removed here |
+|---|---|---|
+| **1NF** | Atomic values, no lists | (already atomic: one part per row, unlike Module 2's `parts_used`) |
+| **2NF** | No partial dependency on part of the key | `part_no → part_price` moved to `part`; `job_id → machine_id, technician, done_on` moved to `job` |
+| **3NF** | No transitive dependency | `machine_id → site` moved to `machine` |

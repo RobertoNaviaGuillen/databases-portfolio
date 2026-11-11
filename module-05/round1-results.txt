@@ -1,0 +1,10 @@
+           fd             violating_values
+------------------------  ----------------
+machine_id -> site                       0
+part_no -> part_price                    0
+job_id -> technician                     0
+job_id -> machine_id                     0
+machine_id -> technician                50
+machine_id  technicians                        who
+----------  -----------  ------------------------------------------------
+cnc-02                7  tech-1,tech-2,tech-3,tech-4,tech-5,tech-6,tech-0
