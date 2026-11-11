@@ -168,3 +168,54 @@ A second full run gave the same picture (A 79 to 97 ms, B 100 to 134 ms), so the
 - **Row width.** Every `report_jobpart` row carries site, technician, price and date, so B has more bytes to read than A's scan of `job_part`.
 
 Denormalization only pays when the **join** is the expensive part. On this dataset it is not.
+
+## Round 5: Price it (writes and storage)
+
+Script: [price.sql](price.sql) · Output: [price-results.txt](price-results.txt)
+
+### One site change
+
+**My prediction:** 4,000 rows in the report table (200,000 rows / 50 machines). **Correct.**
+
+| | Rows touched | Time |
+|---|---|---|
+| `UPDATE machine SET site = 'Bielefeld' WHERE machine_id = 'cnc-02'` | **1** | 6.5 ms |
+| `UPDATE report_jobpart SET site = 'Bielefeld' WHERE machine_id = 'cnc-02'` | **4,000** | 57.6 ms |
+
+1 versus 4,000 is the number that scales: it is the update anomaly from Round 2, now with a price tag. And if anyone updates `machine` but forgets `report_jobpart`, the dashboard shows the old site.
+
+### Storage (`dbstat`)
+
+| Object | Bytes | KB |
+|---|---|---|
+| `job` + `job_part` + `part` + `machine` (tables only, the workbook query) | 4,071,424 | 3,976 |
+| + their primary-key indexes (`sqlite_autoindex_job_part_1` alone is 4,087,808) | 8,167,424 | 7,976 |
+| `report_jobpart` (table only) | 11,091,968 | 10,832 |
+| + `ix_report_machine` | 14,082,048 | 13,752 |
+
+The denormalized table alone is **2.7× bigger** than the four normalized tables, because site, technician, price and date are repeated on every row. Counting the indexes it is still 1.7× bigger. Note that the workbook's storage query leaves out the indexes; `job_part`'s primary-key index is as big as the table itself.
+
+### The index experiment
+
+`DROP INDEX ix_report_machine;` changed B's plan from `SCAN report_jobpart USING INDEX ix_report_machine` to a plain `SCAN report_jobpart`:
+
+| B (report table) | Runs | Median |
+|---|---|---|
+| with `ix_report_machine` | 117.6, 114.1, 112.6 ms | 114.1 ms |
+| **without** the index | 86.0, 70.5, 71.3 ms | **71.3 ms** |
+
+Then I ran the full race again without the index ([output](race-noindex-results.txt)), alternating A and B five times:
+
+| | Median |
+|---|---|
+| A: four-way join | 85.3 ms |
+| B: one table, no index | **69.1 ms** |
+
+**Now B wins, by about 19%**: a small win, which was my original prediction. The index was the reason B lost in Round 4. Reading the table once from start to end is cheaper than walking the index and fetching every row from the table. That is a second negative result: the index made the query slower, exactly like in Module 3.
+
+### Filled-in benchmark table
+
+| Design | Dashboard query (ms, warm, median) | Rows changed by one site update | Storage (KB, tables only) | Redundancy? |
+|---|---|---|---|---|
+| Normalized (3NF) | 92.0 (Round 4) / 85.3 (Round 5 rerun) | **1** | 3,976 | none |
+| Denormalized (report) | 121.2 with index / **69.1 without index** | **4,000** | 10,832 | site/technician/price repeated |

@@ -1,0 +1,39 @@
+== Plan A (normalized, four-way join)
+QUERY PLAN
+|--SCAN jp
+|--SEARCH j USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH m USING INDEX sqlite_autoindex_machine_1 (machine_id=?)
+|--SEARCH p USING INDEX sqlite_autoindex_part_1 (part_no=?)
+`--USE TEMP B-TREE FOR GROUP BY
+== Plan B (denormalized, one table)
+QUERY PLAN
+|--SCAN report_jobpart
+`--USE TEMP B-TREE FOR GROUP BY
+== Same answer? (groups and total cost of A and B)
+q  groups   total
+-  ------  --------
+A     350  722610.0
+B     350  722610.0
+350
+350
+== Timed runs, alternating A and B 5 times
+350
+Run Time: real 0.091622 user 0.046875 sys 0.015625
+350
+Run Time: real 0.072680 user 0.062500 sys 0.000000
+350
+Run Time: real 0.083108 user 0.046875 sys 0.015625
+350
+Run Time: real 0.066569 user 0.015625 sys 0.015625
+350
+Run Time: real 0.088532 user 0.046875 sys 0.015625
+350
+Run Time: real 0.066695 user 0.062500 sys 0.015625
+350
+Run Time: real 0.085276 user 0.046875 sys 0.015625
+350
+Run Time: real 0.069145 user 0.015625 sys 0.046875
+350
+Run Time: real 0.085053 user 0.046875 sys 0.000000
+350
+Run Time: real 0.072916 user 0.015625 sys 0.015625

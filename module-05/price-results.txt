@@ -1,0 +1,50 @@
+== Change the site of one machine: 3NF table vs. report table
+Run Time: real 0.006515 user 0.000000 sys 0.000000
+rows_touched_3nf
+----------------
+               1
+Run Time: real 0.000052 user 0.000000 sys 0.000000
+Run Time: real 0.057585 user 0.000000 sys 0.031250
+rows_touched_report
+-------------------
+               4000
+Run Time: real 0.000033 user 0.000000 sys 0.000000
+== Storage (dbstat: bytes of all pages per design, indexes included)
+                   design                      bytes
+--------------------------------------------  -------
+normalized (job + job_part + part + machine)  4071424
+           design               bytes
+-----------------------------  --------
+denormalized (report_jobpart)  11091968
+           name               bytes
+---------------------------  --------
+report_jobpart               11091968
+sqlite_autoindex_job_part_1   4087808
+job_part                      3407872
+ix_report_machine             2990080
+job                            655360
+sqlite_autoindex_part_1          4096
+sqlite_autoindex_machine_1       4096
+part                             4096
+machine                          4096
+== Index experiment: B with the index, then without it
+QUERY PLAN
+|--SCAN report_jobpart USING INDEX ix_report_machine
+`--USE TEMP B-TREE FOR GROUP BY
+350
+350
+Run Time: real 0.117578 user 0.062500 sys 0.015625
+350
+Run Time: real 0.114067 user 0.046875 sys 0.031250
+350
+Run Time: real 0.112578 user 0.078125 sys 0.046875
+QUERY PLAN
+|--SCAN report_jobpart
+`--USE TEMP B-TREE FOR GROUP BY
+350
+350
+Run Time: real 0.086004 user 0.031250 sys 0.031250
+350
+Run Time: real 0.070549 user 0.031250 sys 0.000000
+350
+Run Time: real 0.071261 user 0.062500 sys 0.000000
