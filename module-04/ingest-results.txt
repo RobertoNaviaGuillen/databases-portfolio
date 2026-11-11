@@ -1,0 +1,6 @@
+CSV rows: 1000
+before:      1 rows in reading
+after run 1: 1001 rows in reading
+after run 2: 1001 rows in reading
+naive table (plain INSERT, no key) after run 1: 1000 rows
+naive table (plain INSERT, no key) after run 2: 2000 rows

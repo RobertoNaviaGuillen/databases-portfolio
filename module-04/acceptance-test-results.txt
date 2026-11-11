@@ -1,0 +1,67 @@
+.headers on
+.mode column
+
+-- PART 1: an unconstrained table accepts everything
+CREATE TABLE t(sensor_id INTEGER, metric TEXT, value REAL);
+INSERT INTO t VALUES (1,'temp_c',9000), (1,'temp_c','hot'), (2,'bogus',-500);
+-- my own attempts to break it
+INSERT INTO t VALUES (NULL, NULL, NULL);            -- a completely empty row
+INSERT INTO t VALUES ('abc', 42, 'x');              -- text as sensor id, number as metric
+INSERT INTO t VALUES (1,'temp_c',9000);             -- exact duplicate of the first row
+INSERT INTO t VALUES (3.7,'temp_c',-1000);          -- fractional id, below absolute zero
+INSERT INTO t VALUES (4,'TEMP_C','25');             -- wrong case, number as text
+SELECT rowid, sensor_id, typeof(sensor_id) AS id_type, metric, value, typeof(value) AS value_type FROM t;
+rowid  sensor_id  id_type  metric   value   value_type
+-----  ---------  -------  ------  -------  ----------
+    1          1  integer  temp_c   9000.0  real
+    2          1  integer  temp_c  hot      text
+    3          2  integer  bogus    -500.0  real
+    4             null                      null
+    5  abc        text     42      x        text
+    6          1  integer  temp_c   9000.0  real
+    7        3.7  real     temp_c  -1000.0  real
+    8          4  integer  TEMP_C     25.0  real
+
+-- PART 2: the same table with the constraints I would ship
+CREATE TABLE t2(
+    sensor_id INTEGER NOT NULL,
+    metric    TEXT    NOT NULL CHECK (metric IN ('temp_c','vib_rms','spindle_load')),
+    value     REAL    NOT NULL CHECK (value BETWEEN -273.15 AND 5000),
+    PRIMARY KEY (sensor_id, metric)
+) STRICT;
+-- one INSERT at a time
+INSERT INTO t2 VALUES (1,'temp_c',41.5);            -- valid, should pass
+INSERT INTO t2 VALUES (2,'temp_c',9000);
+Error near line 26 of module-04/acceptance-test.sql: CHECK constraint failed: value BETWEEN -273.15 AND 5000
+INSERT INTO t2 VALUES (3,'temp_c','hot');
+Error near line 28 of module-04/acceptance-test.sql: cannot store TEXT value in REAL column t2.value
+INSERT INTO t2 VALUES (4,'bogus',-500);
+Error near line 29 of module-04/acceptance-test.sql: CHECK constraint failed: metric IN ('temp_c','vib_rms','spindle_load')
+INSERT INTO t2 VALUES (NULL, NULL, NULL);
+Error near line 30 of module-04/acceptance-test.sql: NOT NULL constraint failed: t2.sensor_id
+INSERT INTO t2 VALUES ('abc', 'temp_c', 20);
+Error near line 31 of module-04/acceptance-test.sql: cannot store TEXT value in INTEGER column t2.sensor_id
+INSERT INTO t2 VALUES (1,'temp_c',41.5);
+Error near line 32 of module-04/acceptance-test.sql: UNIQUE constraint failed: t2.sensor_id, t2.metric
+INSERT INTO t2 VALUES (5,'temp_c',-1000);
+Error near line 33 of module-04/acceptance-test.sql: CHECK constraint failed: value BETWEEN -273.15 AND 5000
+INSERT INTO t2 VALUES (6,'TEMP_C',25);
+Error near line 34 of module-04/acceptance-test.sql: CHECK constraint failed: metric IN ('temp_c','vib_rms','spindle_load')
+INSERT INTO t2 VALUES (7,'temp_c','25');            -- text that looks like a number
+INSERT INTO t2 VALUES (8,'vib_rms',30);             -- integer into a REAL column
+INSERT INTO t2 VALUES (9,'temp_c',3.7e3);           -- plausible but wrong? 3,700 degC passes the range
+SELECT sensor_id, metric, value, typeof(value) AS value_type FROM t2;
+sensor_id  metric   value   value_type
+---------  -------  ------  ----------
+        1  temp_c     41.5  real
+        7  temp_c     25.0  real
+        8  vib_rms    30.0  real
+        9  temp_c   3700.0  real
+
+-- Follow-up 1: what does CHECK do with NULL?
+CREATE TABLE t3(value REAL CHECK (value BETWEEN -273.15 AND 5000)) STRICT;
+INSERT INTO t3 VALUES (NULL);                       -- CHECK sees NULL as "unknown", not "false"
+SELECT count(*) AS null_rows_accepted FROM t3 WHERE value IS NULL;
+null_rows_accepted
+------------------
+                 1
