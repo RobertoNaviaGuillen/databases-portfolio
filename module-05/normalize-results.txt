@@ -1,0 +1,9 @@
+flat_rows  normalized_rows
+---------  ---------------
+   200000           200000
+machines  parts  jobs   job_parts
+--------  -----  -----  ---------
+      50     10  20000     200000
+first_part  last_part  distinct_parts
+----------  ---------  --------------
+P-0002      P-0011                 10
