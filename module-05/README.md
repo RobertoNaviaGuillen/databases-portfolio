@@ -24,7 +24,7 @@ All notes, numbers and explanations are in [normalization-notes.md](normalizatio
 - [x] 6 · Decide: [memo.md](memo.md)
 - [x] 7 · Harvest: [notes](normalization-notes.md#round-7-harvest)
 - [ ] Stretcher (DuckDB): not done
-- [ ] Reflection: [ref05.md](../Reflections/ref05.md)
+- [x] Reflection: [ref05.md](../Reflections/ref05.md)
 
 ### Rebuild everything
 
