@@ -129,3 +129,42 @@ Script: [round2-anomalies.sql](round2-anomalies.sql) · Output: [round2-results.
 | **1NF** | Atomic values, no lists | (already atomic: one part per row, unlike Module 2's `parts_used`) |
 | **2NF** | No partial dependency on part of the key | `part_no → part_price` moved to `part`; `job_id → machine_id, technician, done_on` moved to `job` |
 | **3NF** | No transitive dependency | `machine_id → site` moved to `machine` |
+
+## Round 4: Race it (normalized vs. denormalized)
+
+[report.sql](report.sql) builds `report_jobpart` (site, technician and price copied onto all 200,000 rows) with the index `ix_report_machine`. [race.sql](race.sql) shows both plans, checks that both queries give the same answer, warms the cache with one untimed run each, then alternates A and B five times ([output](race-results.txt)).
+
+**My prediction:** B (one table) wins, but only by a little. **Result: wrong, A won.**
+
+**Same answer:** both return 350 groups with a total cost of 722,610.0 (the number the workbook gives).
+
+**Plans:**
+
+```text
+A (normalized)                                         B (denormalized)
+|--SCAN jp                                             |--SCAN report_jobpart USING INDEX ix_report_machine
+|--SEARCH j USING INTEGER PRIMARY KEY (rowid=?)        `--USE TEMP B-TREE FOR GROUP BY
+|--SEARCH m USING INDEX sqlite_autoindex_machine_1 (machine_id=?)
+|--SEARCH p USING INDEX sqlite_autoindex_part_1 (part_no=?)
+`--USE TEMP B-TREE FOR GROUP BY
+```
+
+**Timings** (SQLite 3.54.0 CLI, `.timer on`, warm cache, seconds converted to ms):
+
+| Run | A: four-way join | B: one table |
+|---|---|---|
+| 1 | 102.2 | 126.4 |
+| 2 | 92.0 | 124.0 |
+| 3 | 91.4 | 103.6 |
+| 4 | 81.5 | 103.1 |
+| 5 | 92.8 | 121.2 |
+| **median** | **92.0 ms** | **121.2 ms** |
+
+A second full run gave the same picture (A 79 to 97 ms, B 100 to 134 ms), so the result is not noise.
+
+**Why the one-table design lost here:**
+- **The plan for B uses the index in the worst way.** `SCAN report_jobpart USING INDEX ix_report_machine` walks the whole index in `machine_id` order (to help the `GROUP BY`) and then jumps to the table for **every one** of the 200,000 rows to read `site`, `technician`, `part_price` and `done_on`. That is 200,000 extra lookups. Round 5 tests dropping the index.
+- **The joins are cheap here.** `machine` has 50 rows and `part` 10, so every `SEARCH` hits pages that are already in memory. A only has to scan `job_part`, which is narrow (two columns).
+- **Row width.** Every `report_jobpart` row carries site, technician, price and date, so B has more bytes to read than A's scan of `job_part`.
+
+Denormalization only pays when the **join** is the expensive part. On this dataset it is not.
