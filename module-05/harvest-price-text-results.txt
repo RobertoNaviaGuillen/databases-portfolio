@@ -1,0 +1,6 @@
+flat_type  text_min  text_max  real_min  real_max
+---------  --------  --------  --------  --------
+text       10.00     9.00           6.0      15.0
+part_table_type
+---------------
+real

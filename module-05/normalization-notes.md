@@ -219,3 +219,19 @@ Then I ran the full race again without the index ([output](race-noindex-results.
 |---|---|---|---|---|
 | Normalized (3NF) | 92.0 (Round 4) / 85.3 (Round 5 rerun) | **1** | 3,976 | none |
 | Denormalized (report) | 121.2 with index / **69.1 without index** | **4,000** | 10,832 | site/technician/price repeated |
+
+## Round 7: Harvest
+
+My curiosities from this module:
+
+1. **The index made the copied table slower** (Round 4 and 5). I expected it after Module 3, where an index made the dashboard 8× slower. Same reason here: the plan walked the whole index and then fetched each of the 200,000 rows from the table. Without the index the copied table went from 121 ms to 69 ms. Source: [race-results.txt](race-results.txt), [price-results.txt](price-results.txt).
+2. **Prices stored as text, not as numbers.** The generator uses `printf('%.2f', ...)`, which returns **text**, into a column declared `TEXT`. I checked what this breaks ([script](harvest-price-text.sql), [output](harvest-price-text-results.txt)):
+
+   | | min | max |
+   |---|---|---|
+   | as stored (text) | `10.00` | `9.00` |
+   | with `CAST(... AS REAL)` | 6.0 | 15.0 |
+
+   As text, `9.00` counts as the "highest" price even though 15.00 exists, because text is compared character by character (`'9' > '1'`). This is the same defect as `unit_price < '15'` in Module 2. The 3NF `part` table fixes it with `CAST(part_price AS REAL)` (its values are type `real`).
+
+Not done: the stretcher (DuckDB comparison).

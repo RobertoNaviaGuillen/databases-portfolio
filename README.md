@@ -20,6 +20,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 - [Module 2: Data Contracts & Legacy Schemas](module-02/README.md)
 - [Module 3: LLM-Assisted SQL & Query Profiling](module-03/README.md)
 - [Module 4: Data Integrity, Constraints & Edge Triggers](module-04/README.md)
+- [Module 5: Normalization vs. Denormalization](module-05/README.md)
 - ...
 
 ## Reflections
