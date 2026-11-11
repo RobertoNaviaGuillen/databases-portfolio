@@ -22,7 +22,7 @@ By the end of this module, I can:
 - [x] Task 3: Triggers for alarms and audit ([trigger DDL](triggers.sql), [exercise](task3-triggers.sql), [output](task3-results.txt), [cost benchmark](trigger_bench.py), [benchmark output](trigger-bench-results.txt))
 - [x] Task 4: Access control without a server ([script](task4-access.sh), [output](task4-results.txt))
 - [ ] Task 5 (Stretcher): not done
-- [ ] Reflection: [ref04.md](../Reflections/ref04.md)
+- [x] Reflection: [ref04.md](../Reflections/ref04.md)
 
 ### Rebuild everything
 
