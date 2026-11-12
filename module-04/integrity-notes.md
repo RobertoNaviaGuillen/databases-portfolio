@@ -67,4 +67,18 @@ Each INSERT run one at a time:
 
 ## Task B: share with another pod
 
-_Pending._ My pod has not yet documented a pod-to-pod exchange for this module. This section will be filled in after we discuss it.
+We did not meet with another pod for this task. We kept the discussion inside our own pod: with five members ([Leviscus](https://github.com/leviscusgnjeru/databases), [Ian](https://github.com/Okach81/Databases_ianportfolio), [Chanbopha](https://github.com/chanbopharin), [Erick](https://github.com/ErickLiebisch/databases-portfolio) and me) there were already plenty of different opinions. Below I compare my acceptance test with the one [Erick documented](https://github.com/ErickLiebisch/databases-portfolio/blob/main/Module04/README.md) in his portfolio.
+
+| Point | Me | Erick | Comparison |
+|---|---|---|---|
+| Junk rows tried on the table without rules | the three workbook rows + 5 of my own (empty row, text id, duplicate, fractional id, wrong case) | the three workbook rows | Both: everything was accepted, nothing complained |
+| The three workbook rows on the constrained table | rejected by `CHECK` range, `STRICT`, `CHECK` list | rejected by the same three, with the same error messages | Same result |
+| `CHECK` with `NULL` | a separate table with only a `CHECK`: `NULL` was accepted | his `value` column has a `CHECK` but no `NOT NULL`: `(3,'temp_c',NULL)` was accepted | Same lesson: `CHECK` only rejects a definite "false"; `NULL` is "unknown" and passes, so `NOT NULL` is needed next to it. Erick's comparison: an inspector with a caliper cannot reject a part that is not in the tray |
+| Plausible but wrong value | 3,700 °C accepted | 4,999 °C accepted | Same lesson: the range stops the physically impossible, not what is wrong for a CNC machine |
+| Something only one of us found | `STRICT` still accepts the text `'25'` in a `REAL` column (it converts it to `25.0`); `'TEMP_C'` is rejected because the `CHECK` list is case-sensitive | how to tell the layers apart from the error keyword: `UNIQUE` / `PRIMARY KEY` / `NOT NULL` = entity, `FOREIGN KEY` = referential, `CHECK` / type = semantic | Each of us added one thing the other did not have |
+
+**Agreed points:**
+- The most surprising thing an unconstrained table accepts is the text `'hot'` in a `REAL` column: without `STRICT`, the declared type is only a suggestion.
+- The hardest constraint to get right is **`CHECK` with `NULL`**: it looks like a full rule, but it silently lets missing values through.
+
+**Unresolved (for `#sql-questions`):** how to reject "plausible but wrong" values. A narrower range per metric, or a trigger that compares with the machine's normal values?

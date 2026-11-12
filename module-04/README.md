@@ -15,7 +15,7 @@ By the end of this module, I can:
 ## Tasks
 
 - [x] Pod Study, Task A (acceptance test): [acceptance-test.sql](acceptance-test.sql), [output](acceptance-test-results.txt), notes in [integrity-notes.md](integrity-notes.md#task-a-the-acceptance-test)
-- [ ] Pod Study, Task B (share with another pod): pending, see [integrity-notes.md](integrity-notes.md#task-b-share-with-another-pod)
+- [x] Pod Study, Task B: discussed inside my pod (no other pod), compared with Erick, see [integrity-notes.md](integrity-notes.md#task-b-share-with-another-pod)
 - [x] Setup: [setup.sql](setup.sql) builds `edge.db` (not committed; rebuild with the commands below)
 - [x] Task 1: Prove the constraints work ([script](task1-constraints.sql), [output](task1-results.txt))
 - [x] Task 2: Idempotent ingestion with UPSERT ([SQL](task2-upsert.sql), [output](task2-results.txt), [ingest.py](ingest.py), [double-run output](ingest-results.txt))
