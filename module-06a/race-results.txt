@@ -1,0 +1,4 @@
+dashboard  rows sqlite 350, duckdb 350, identical results: True
+dashboard  sqlite  2480.2 ms [2444.9-2636.2]   duckdb   33.3 ms [30.8-33.5]     74.5x
+monthly    rows sqlite 1500, duckdb 1500, identical results: True
+monthly    sqlite  3073.1 ms [2781.0-3301.4]   duckdb   28.8 ms [26.3-33.9]    106.7x

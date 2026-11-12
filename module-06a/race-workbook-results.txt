@@ -1,0 +1,2 @@
+dashboard  sqlite  2516.5 ms [2411.3-2800.4]   duckdb   30.7 ms [29.3-32.5]     82.0x
+monthly    sqlite  1992.8 ms [1961.0-2067.9]   duckdb   30.0 ms [28.6-32.5]     66.4x
