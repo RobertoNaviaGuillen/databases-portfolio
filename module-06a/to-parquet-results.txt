@@ -1,0 +1,6 @@
+parquet rows: 2000000
+parquet MB  : 2.4
+parquet check: 2000000 21000000.0 2026-01-01 2028-06-27
+sqlite check : 2000000 21000000.0 2026-01-01 2028-06-27
+identical    : True
+history.db MB: 112.65

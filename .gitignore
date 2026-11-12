@@ -11,3 +11,4 @@ __pycache__/
 
 # generated data (rebuild with module-01/generate_telemetry.py)
 module-01/telemetry.csv
+module-06a/report_jobpart.csv
