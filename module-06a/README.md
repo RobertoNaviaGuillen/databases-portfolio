@@ -24,7 +24,7 @@ All numbers and explanations are in [duckdb-notes.md](duckdb-notes.md).
 - [x] 6 · Decide: [memo.md](memo.md)
 - [x] 7 · Core homework: zstd copy and refresh paragraph ([zstd.py](zstd.py), [output](zstd-results.txt))
 - [ ] Stretchers S1-S3, intense track (`refresh.py`): not done
-- [ ] Reflection: [ref06a.md](../Reflections/ref06a.md)
+- [x] Reflection: [ref06a.md](../Reflections/ref06a.md)
 
 ### Rebuild everything
 

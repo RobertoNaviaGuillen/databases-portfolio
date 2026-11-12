@@ -31,6 +31,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 - [Reflection 3](Reflections/ref03.md)
 - [Reflection 4](Reflections/ref04.md)
 - [Reflection 5](Reflections/ref05.md)
+- [Reflection 6a](Reflections/ref06a.md)
 
 ## Course links
 
