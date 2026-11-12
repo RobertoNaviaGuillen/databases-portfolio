@@ -1,0 +1,3 @@
+identical results: True
+snappy   2.40 MB   dashboard median  29.6 ms
+zstd     1.39 MB   dashboard median  30.3 ms
