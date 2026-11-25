@@ -22,6 +22,7 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
 - [Module 4: Data Integrity, Constraints & Edge Triggers](module-04/README.md)
 - [Module 5: Normalization vs. Denormalization](module-05/README.md)
 - [Module 6a: The Analytical Engine (DuckDB)](module-06a/README.md)
+- [Module 6b: Polyglot Persistence & the Decision](module-06b/README.md)
 - ...
 
 ## Reflections
