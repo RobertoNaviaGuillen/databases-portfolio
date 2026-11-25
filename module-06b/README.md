@@ -18,7 +18,7 @@ By the end of this module, I can:
 - [x] Task 2: The shape, JSON column ([json_bench.py](json_bench.py), [output](json-bench-results.txt)) and key-value comparison ([kv_compare.py](kv_compare.py), [output](kv-compare-results.txt))
 - [x] Task 3: The decision record ([decision-record.md](decision-record.md)), defence with Pod 2 (recorded by Leviscus) and one revised row
 - [ ] Project ticket
-- [ ] Reflection: [ref06b.md](../Reflections/ref06b.md)
+- [x] Reflection: [ref06b.md](../Reflections/ref06b.md)
 
 ## Task 1: The boundary (shared PostgreSQL server)
 
