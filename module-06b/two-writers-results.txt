@@ -1,0 +1,9 @@
+== 1. Two writers, one row
+writer A: BEGIN IMMEDIATE + UPDATE done, not committed yet
+writer B: database is locked
+writer B can still READ: 0 (the old value; A's change is not committed)
+after A commits, B retries and succeeds. parts_produced = 2 (expected 2)
+== 2. Lost update: read in the app, add 1 in the app, write back
+both added 1 to 2: expected 4, got 3. One update was lost.
+The database did not prevent it: each UPDATE was valid on its own. The fix is to let the
+database do the arithmetic (SET parts_produced = parts_produced + 1), as in part 1.

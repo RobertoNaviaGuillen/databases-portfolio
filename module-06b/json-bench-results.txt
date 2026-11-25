@@ -1,0 +1,24 @@
+-- a path behaves like a column (first five rows)
+('cnc-01', 'Siemens')
+('cnc-02', 'Fanuc')
+('molder-07', 'Arburg')
+('device-0004', 'Fanuc')
+('device-0005', 'Arburg')
+-- the ->> shorthand returns a scalar (first five rows)
+('cnc-01', '4.2')
+('cnc-02', '3.9')
+('molder-07', '8.1')
+('device-0004', '4.4')
+('device-0005', '0.5')
+-- an object becomes rows
+('cnc-01', 'vendor', 'Siemens')
+('cnc-01', 'firmware', '4.2')
+('cnc-01', 'calibrated', '2026-01-10')
+-- index the path you filter on, then prove it
+[(3, 0, 61, 'SEARCH device USING INDEX ix_device_vendor (<expr>=?)')]
+-- now break it: the shorthand is a different expression
+[(2, 0, 216, 'SCAN device')]
+-- same result? json_extract: 334 rows, ->>: 334 rows
+-- non-JSON rejected: CHECK constraint failed: json_valid(meta)
+-- a new vendor field needs no migration:
+('laser-01', 6)

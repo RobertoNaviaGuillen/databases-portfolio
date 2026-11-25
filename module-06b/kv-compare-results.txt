@@ -1,0 +1,15 @@
+shelve  set=  87.702s get=   0.229s
+sqlite  set=   0.066s get=   1.814s
+sessions per filter (SQLite, one query): [('filter=city:0', 5000), ('filter=city:1', 5000), ('filter=city:2', 5000), ('filter=city:3', 5000)]
+shelve  set= 106.895s get=   0.220s
+sqlite  set=   0.181s get=   1.699s
+sessions per filter (SQLite, one query): [('filter=city:0', 5000), ('filter=city:1', 5000), ('filter=city:2', 5000), ('filter=city:3', 5000)]
+shelve  set=  77.321s get=   0.266s
+sqlite  set=   0.068s get=   1.730s
+sessions per filter (SQLite, one query): [('filter=city:0', 5000), ('filter=city:1', 5000), ('filter=city:2', 5000), ('filter=city:3', 5000)]
+
+# Backend check (run once after the benchmark):
+#   uv run python -c "import dbm; print(dbm.whichdb('module-06b/sessions'))"
+#   -> dbm.sqlite3
+# On Python 3.14 (Windows) shelve's default backend is dbm.sqlite3: the "key-value store" is a SQLite
+# file with one table (Dict), and every db[key] = value is committed on its own.
