@@ -11,8 +11,8 @@ Here I document all my module work, lab tasks, reflections, and links to my peer
   - Ian Okach, [portfolio](https://github.com/Okach81/Databases_ianportfolio)
   - Chanbopha Rin, [GitHub profile](https://github.com/chanbopharin)
   - Erick Liebisch, [portfolio](https://github.com/ErickLiebisch/databases-portfolio)
-- **Final project team:** _to be defined_
-- **Final project repository:** _to be defined_
+- **Final project team:** ShelfWise Medical (Pod 16 merged with Pod 06): Leviscus Njeru, Erick Liebisch, Ian Okach, Chanbopha Rin, Anshpreet Singh, Chengpu Li, Smit Vekariya and me (data generator)
+- **Final project repository:** [shelfwise-medical/shelfwise-db](https://github.com/shelfwise-medical/shelfwise-db)
 
 ## Table of Contents
 
